@@ -87,6 +87,9 @@ func main() {
 		depth: 2,
 	}
 
+	http.HandleFunc("/keyword/insert", keywordInsert)
+	http.HandleFunc("/keyword/create", keywordCreate)
+
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("ListenAndSearver:", err)
 	}

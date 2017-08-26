@@ -62,5 +62,5 @@ func (m *message) execute() {
 		}
 	}
 	log.Println("スクレイピング完了")
-	os.Exit(0)
+	//os.Exit(0)
 }

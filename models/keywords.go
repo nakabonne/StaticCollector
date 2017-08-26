@@ -1,6 +1,12 @@
 package models
 
+import "fmt"
+
 type Keywords struct {
 	ID   int
-	word string
+	Word string
+}
+
+func (p *Keywords) Insert() {
+	fmt.Println("未実装")
 }
