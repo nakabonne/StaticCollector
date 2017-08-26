@@ -6,6 +6,10 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
+	"webCrawler/models"
+
+	"gopkg.in/mgo.v2/bson"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -86,6 +90,24 @@ func main() {
 		url:   firstURL,
 		depth: 2,
 	}
+
+	// mongoインサート方法--------------------------------
+	page := &models.Pages{
+		ID:        bson.NewObjectId(),
+		Title:     "行くぜ",
+		URL:       "iku.com",
+		HTML:      "<html></html>",
+		Rank:      1,
+		TargetDay: time.Now(),
+	}
+	page.Insert()
+	// 検索方法はこちら↓
+	// http://qiita.com/enokidoK/items/a3aff4c05e494b004ef8
+
+	//p := new(models.Pages)
+	//query := db.C("pages").Find(bson.M{})
+	//query.One(&p)
+	// -------------------------------------------
 
 	http.HandleFunc("/keyword/insert", keywordInsert)
 	http.HandleFunc("/keyword/create", keywordCreate)
