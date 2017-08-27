@@ -12,7 +12,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/PuerkitoBio/goquery"
+	_ "github.com/go-sql-driver/mysql"
 )
+
+var mysqlDB = models.OpenMysql()
 
 func Crawl(url string, depth int, m *message) {
 	defer func() { m.quit <- 0 }()
@@ -78,6 +81,7 @@ func Fetch(u string) (urls []string, err error) {
 }
 
 func main() {
+	defer mysqlDB.Close()
 	var word = flag.String("w", " ", "検索ワードを入力して下さい")
 	flag.Parse()
 	log.Println("検索ワード：", *word)
@@ -101,12 +105,6 @@ func main() {
 		TargetDay: time.Now(),
 	}
 	page.Insert()
-	// 検索方法はこちら↓
-	// http://qiita.com/enokidoK/items/a3aff4c05e494b004ef8
-
-	//p := new(models.Pages)
-	//query := db.C("pages").Find(bson.M{})
-	//query.One(&p)
 	// -------------------------------------------
 
 	http.HandleFunc("/keyword/insert", keywordInsert)

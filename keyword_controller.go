@@ -23,10 +23,7 @@ func keywordCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	word := strings.Join(r.Form["word"], "")
-	keyword := models.Keywords{
-		ID:   4,
-		Word: word,
-	}
-	keyword.Insert()
+	keyword := &models.Keywords{Word: word}
+	keyword.Insert(mysqlDB)
 	http.Redirect(w, r, "/keyword/insert", 301)
 }

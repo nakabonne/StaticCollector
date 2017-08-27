@@ -33,3 +33,10 @@ func session() *mgo.Session {
 	}
 	return session
 }
+
+// 検索方法はこちら↓
+// http://qiita.com/enokidoK/items/a3aff4c05e494b004ef8
+
+//p := new(models.Pages)
+//query := db.C("pages").Find(bson.M{})
+//query.One(&p)
