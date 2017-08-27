@@ -107,7 +107,7 @@ func Fetch(u string, depth int) (urls []string, html string, err error) {
 	if err != nil {
 		return
 	}
-	// html取得------------------------------
+	// 検索結果ページの場合のみhtml取得
 	if depth == 1 {
 		html, err = getHTML(baseURL.String())
 		if err != nil {
@@ -116,18 +116,16 @@ func Fetch(u string, depth int) (urls []string, html string, err error) {
 	}
 
 	// スクレイピング------------------------------------
-	resp2, err := http.Get(baseURL.String())
+	res, err := http.Get(baseURL.String())
 	if err != nil {
 		return
 	}
-	defer resp2.Body.Close()
-	doc, err := goquery.NewDocumentFromReader(resp2.Body)
+	defer res.Body.Close()
+	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		return
 	}
 	title, err := getTitle(doc)
-	//rank := 1 // 仮
-	//fmt.Println("titleは", title)
 	page := &models.Pages{
 		ID:        bson.NewObjectId(),
 		Title:     title,
@@ -138,20 +136,21 @@ func Fetch(u string, depth int) (urls []string, html string, err error) {
 	}
 	fmt.Println("構造体は", page)
 
-	// ①1回目のみなので関数分ける-----------------------------------------------------------------
-	urls = make([]string, 0)
-	doc.Find(".r").Each(func(_ int, srg *goquery.Selection) {
-		srg.Find("a").Each(func(_ int, s *goquery.Selection) {
-			href, exists := s.Attr("href")
-			if exists {
-				reqUrl, err := baseURL.Parse(href)
-				if err == nil {
-					urls = append(urls, reqUrl.String())
+	// 次ページのurlも取得したい場合
+	if depth != 1 {
+		urls = make([]string, 0)
+		doc.Find(".r").Each(func(_ int, srg *goquery.Selection) {
+			srg.Find("a").Each(func(_ int, s *goquery.Selection) {
+				href, exists := s.Attr("href")
+				if exists {
+					reqURL, err := baseURL.Parse(href)
+					if err == nil {
+						urls = append(urls, reqURL.String())
+					}
 				}
-			}
+			})
 		})
-	})
-	// -------------------------------------------------------------------------
+	}
 
 	return
 }
