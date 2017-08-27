@@ -101,24 +101,22 @@ func Crawl(url string, depth int, c *crawler) {
 	}
 }
 
-// Fetch フェッチする
+// Fetch ②pages構造体を返す関数にして、1回目は別の関数を実行するようにする
 func Fetch(u string, depth int) (urls []string, html string, err error) {
-	baseUrl, err := url.Parse(u)
+	baseURL, err := url.Parse(u)
 	if err != nil {
 		return
 	}
 	// html取得------------------------------
-	resp, err := http.Get(baseUrl.String())
-	if err != nil {
-		return
-	}
 	if depth == 1 {
-		html, err = getStaticFile(*resp)
+		html, err = getHTML(baseURL.String())
+		if err != nil {
+			return
+		}
 	}
-	defer resp.Body.Close()
 
 	// スクレイピング------------------------------------
-	resp2, err := http.Get(baseUrl.String())
+	resp2, err := http.Get(baseURL.String())
 	if err != nil {
 		return
 	}
@@ -140,13 +138,13 @@ func Fetch(u string, depth int) (urls []string, html string, err error) {
 	}
 	fmt.Println("構造体は", page)
 
-	// 1回目のみなので関数分ける-----------------------------------------------------------------
+	// ①1回目のみなので関数分ける-----------------------------------------------------------------
 	urls = make([]string, 0)
 	doc.Find(".r").Each(func(_ int, srg *goquery.Selection) {
 		srg.Find("a").Each(func(_ int, s *goquery.Selection) {
 			href, exists := s.Attr("href")
 			if exists {
-				reqUrl, err := baseUrl.Parse(href)
+				reqUrl, err := baseURL.Parse(href)
 				if err == nil {
 					urls = append(urls, reqUrl.String())
 				}
@@ -158,13 +156,19 @@ func Fetch(u string, depth int) (urls []string, html string, err error) {
 	return
 }
 
-func getStaticFile(res http.Response) (file string, err error) {
+func getHTML(url string) (html string, err error) {
+	res, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer res.Body.Close()
+
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return
 	}
 	buf := bytes.NewBuffer(body)
-	file = buf.String()
+	html = buf.String()
 	return
 }
 
