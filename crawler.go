@@ -23,7 +23,7 @@ type crawler struct {
 }
 type respons struct {
 	url  string
-	html string
+	page *models.Pages
 	err  interface{}
 }
 type request struct {
@@ -39,7 +39,7 @@ func newCrawler() *crawler {
 	}
 }
 
-func (c *crawler) execute() {
+func (c *crawler) collectHTML() {
 	wc := 0 // ワーカーの数
 	urlMap := make(map[string]bool, 100)
 	done := false
@@ -47,25 +47,30 @@ func (c *crawler) execute() {
 		select {
 		case res := <-c.res:
 			if res.err == nil {
-				//fmt.Printf("%s\n", res.url)
-				//fmt.Println("htmlは")
-				//fmt.Printf("%s\n", res.html)
+				fmt.Println("構造体は", res.page)
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.url, res.err)
 			}
 		case req := <-c.req:
-			if req.depth == 0 {
-				break
-			}
-
 			if urlMap[req.url] {
 				// 取得済み
 				break
 			}
 			urlMap[req.url] = true
-
 			wc++
-			go Crawl(req.url, req.depth, c)
+
+			baseURL, err := url.Parse(req.url)
+			if err != nil {
+				log.Fatal("エラー", err)
+			}
+
+			if req.depth == 0 {
+				break
+			} else if req.depth == 1 {
+				go getPage(baseURL, c)
+			} else {
+				go createRequest(baseURL, req.depth, c)
+			}
 		case <-c.quit:
 			wc--
 			if wc == 0 {
@@ -77,18 +82,22 @@ func (c *crawler) execute() {
 }
 
 // Crawl クロールする
-func Crawl(url string, depth int, c *crawler) {
+func createRequest(u *url.URL, depth int, c *crawler) {
 	defer func() { c.quit <- 0 }()
 
-	// WebページからURLを取得
-	urls, html, err := Fetch(url, depth)
-
-	// 結果送信
-	c.res <- &respons{
-		url:  url,
-		html: html,
-		err:  err,
-	}
+	urls := make([]string, 0)
+	doc, err := getDoc(u)
+	doc.Find(".r").Each(func(_ int, srg *goquery.Selection) {
+		srg.Find("a").Each(func(_ int, s *goquery.Selection) {
+			href, exists := s.Attr("href")
+			if exists {
+				reqURL, err := u.Parse(href)
+				if err == nil {
+					urls = append(urls, reqURL.String())
+				}
+			}
+		})
+	})
 
 	if err == nil {
 		for _, url := range urls {
@@ -101,57 +110,51 @@ func Crawl(url string, depth int, c *crawler) {
 	}
 }
 
-// Fetch ②pages構造体を返す関数にして、1回目は別の関数を実行するようにする
-func Fetch(u string, depth int) (urls []string, html string, err error) {
-	baseURL, err := url.Parse(u)
-	if err != nil {
-		return
-	}
-	// 検索結果ページの場合のみhtml取得
-	if depth == 1 {
-		html, err = getHTML(baseURL.String())
-		if err != nil {
-			return
-		}
-	}
+func getPage(u *url.URL, c *crawler) {
+	defer func() { c.quit <- 0 }()
 
-	// スクレイピング------------------------------------
-	res, err := http.Get(baseURL.String())
+	doc, err := getDoc(u)
+
+	var html string
+	var title string
+	html, err = getHTML(u.String())
 	if err != nil {
 		return
 	}
-	defer res.Body.Close()
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	title, err = getTitle(doc)
 	if err != nil {
 		return
 	}
-	title, err := getTitle(doc)
+	url := u.String()
 	page := &models.Pages{
 		ID:        bson.NewObjectId(),
 		Title:     title,
-		URL:       u,
+		URL:       url,
 		HTML:      html,
 		Rank:      1,
 		TargetDay: time.Now(),
 	}
-	fmt.Println("構造体は", page)
+	// 結果送信
+	c.res <- &respons{
+		page: page,
+		err:  err,
+	}
+}
 
-	// 次ページのurlも取得したい場合
-	if depth != 1 {
-		urls = make([]string, 0)
-		doc.Find(".r").Each(func(_ int, srg *goquery.Selection) {
-			srg.Find("a").Each(func(_ int, s *goquery.Selection) {
-				href, exists := s.Attr("href")
-				if exists {
-					reqURL, err := baseURL.Parse(href)
-					if err == nil {
-						urls = append(urls, reqURL.String())
-					}
-				}
-			})
-		})
+func getDoc(u *url.URL) (doc *goquery.Document, err error) {
+	if err != nil {
+		return
 	}
 
+	res, err := http.Get(u.String())
+	if err != nil {
+		return
+	}
+	defer res.Body.Close()
+	doc, err = goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return
+	}
 	return
 }
 
@@ -175,6 +178,5 @@ func getTitle(doc *goquery.Document) (title string, err error) {
 	doc.Find("title").Each(func(_ int, srg *goquery.Selection) {
 		title = srg.Text()
 	})
-
 	return
 }

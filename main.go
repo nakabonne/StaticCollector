@@ -24,7 +24,7 @@ func main() {
 	firstURL := "https://www.google.co.jp/search?rlz=1C5CHFA_enJP693JP693&q=" + string(*word)
 	log.Println("検索URL：", firstURL)
 	m := newCrawler()
-	go m.execute()
+	go m.collectHTML()
 	m.req <- &request{
 		url:   firstURL,
 		depth: 2,
