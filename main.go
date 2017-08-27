@@ -15,32 +15,26 @@ var mysqlDB = models.OpenMysql()
 var mongoDB = models.GetSettionMongo()
 
 func main() {
-	defer mysqlDB.Close()
-	defer mongoDB.Clone()
+	// いずれ消す---------------------------------------------------------------------
 	var word = flag.String("w", " ", "検索ワードを入力して下さい")
 	flag.Parse()
 	log.Println("検索ワード：", *word)
 	*word = strings.Replace(*word, " ", "+", -1)
 	firstURL := "https://www.google.co.jp/search?rlz=1C5CHFA_enJP693JP693&q=" + string(*word)
 	log.Println("検索URL：", firstURL)
-	m := newCrawler()
-	go m.collectHTML()
-	m.req <- &request{
+	// -------------------------------------------------------------------------------
+
+	defer mysqlDB.Close()
+	defer mongoDB.Clone()
+	// クローリング開始-------------
+	c := newCrawler()
+	go c.collectHTML()
+	c.req <- &request{
 		url:   firstURL,
 		depth: 2,
 	}
+	// -----------------------------
 
-	/* mongoインサート方法--------------------------------
-		page := &models.Pages{
-			ID:        bson.NewObjectId(),
-			Title:     "行くぜ",
-			URL:       "iku.com",
-			HTML:      "<html></html>",
-			Rank:      1,
-			TargetDay: time.Now(),
-		}
-		page.Insert(mongoDB)
-	---------------------------------------------------*/
 	http.HandleFunc("/keyword/insert", keywordInsert)
 	http.HandleFunc("/keyword/create", keywordCreate)
 
