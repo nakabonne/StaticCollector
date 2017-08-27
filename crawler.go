@@ -45,12 +45,14 @@ func (c *crawler) collectHTML() {
 	done := false
 	for !done {
 		select {
+
 		case res := <-c.res:
 			if res.err == nil {
 				fmt.Println("構造体は", res.page)
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.url, res.err)
 			}
+
 		case req := <-c.req:
 			if urlMap[req.url] {
 				// 取得済み
@@ -58,25 +60,26 @@ func (c *crawler) collectHTML() {
 			}
 			urlMap[req.url] = true
 			wc++
-
 			baseURL, err := url.Parse(req.url)
 			if err != nil {
 				log.Fatal("エラー", err)
 			}
-
-			if req.depth == 0 {
+			switch req.depth {
+			case 0:
 				break
-			} else if req.depth == 1 {
+			case 1:
 				go getPage(baseURL, c)
-			} else {
+			default:
 				go createRequest(baseURL, req.depth, c)
 			}
+
 		case <-c.quit:
 			wc--
 			if wc == 0 {
 				done = true
 			}
 		}
+
 	}
 	log.Println("スクレイピング完了")
 }
