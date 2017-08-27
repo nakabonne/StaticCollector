@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -25,9 +26,10 @@ type respons struct {
 	err  interface{}
 }
 type request struct {
-	url   string
-	rank  int
-	depth int
+	url    string
+	wordID int
+	rank   int
+	depth  int
 }
 
 func newCrawler() *crawler {
@@ -41,24 +43,31 @@ func newCrawler() *crawler {
 func (c *crawler) collectHTML() {
 	wc := 0 // ワーカーの数
 	urlMap := make(map[string]bool, 100)
+	wordID := 0
 	done := false
 	for !done {
 		select {
 
 		case res := <-c.res:
 			if res.err == nil {
-				//fmt.Println("構造体は", res.page)
+				fmt.Println("構造体は", res.page)
 				res.page.Insert(mongoDB)
 			} else {
 				log.Fatal("エラー", res.err)
 			}
 
 		case req := <-c.req:
+			if wordID != 0 {
+				//wordID = req.wordID
+			}
 			if urlMap[req.url] {
 				// 取得済み
 				break
 			}
 			urlMap[req.url] = true
+			if wordID == 0 {
+				wordID = req.wordID
+			}
 			wc++
 			baseURL, err := url.Parse(req.url)
 			if err != nil {
@@ -68,7 +77,7 @@ func (c *crawler) collectHTML() {
 			case 0:
 				break
 			case 1:
-				go createPage(baseURL, req.rank, c)
+				go createPage(baseURL, req.rank, wordID, c)
 			default:
 				go createRequest(baseURL, req.depth, c)
 			}
@@ -113,7 +122,7 @@ func createRequest(u *url.URL, depth int, c *crawler) {
 	}
 }
 
-func createPage(u *url.URL, rank int, c *crawler) {
+func createPage(u *url.URL, rank int, wordID int, c *crawler) {
 	defer func() { c.quit <- 0 }()
 
 	doc, err := getDoc(u)
@@ -131,6 +140,7 @@ func createPage(u *url.URL, rank int, c *crawler) {
 	url := u.String()
 	page := &models.Pages{
 		ID:        bson.NewObjectId(),
+		WordID:    wordID,
 		Title:     title,
 		URL:       url,
 		HTML:      html,

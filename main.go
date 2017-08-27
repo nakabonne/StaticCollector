@@ -29,9 +29,11 @@ func main() {
 	// クローリング開始-------------
 	c := newCrawler()
 	go c.collectHTML()
+	wordID := 1 // SQLから取得する
 	c.req <- &request{
-		url:   firstURL,
-		depth: 2,
+		url:    firstURL,
+		wordID: wordID,
+		depth:  2,
 	}
 	// -----------------------------
 

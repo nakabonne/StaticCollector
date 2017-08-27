@@ -10,6 +10,7 @@ import (
 // Pages ページを管理
 type Pages struct {
 	ID        bson.ObjectId `bson:"_id"`
+	WordID    int           `bson:"word_id"`
 	Title     string        `bson:"title"`
 	URL       string        `bson:"url"`
 	HTML      string        `bson:"html"`
