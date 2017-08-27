@@ -2,12 +2,10 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
 	"webCrawler/models"
 
@@ -28,6 +26,7 @@ type respons struct {
 }
 type request struct {
 	url   string
+	rank  int
 	depth int
 }
 
@@ -48,9 +47,10 @@ func (c *crawler) collectHTML() {
 
 		case res := <-c.res:
 			if res.err == nil {
-				fmt.Println("構造体は", res.page)
+				//fmt.Println("構造体は", res.page)
+				res.page.Insert(mongoDB)
 			} else {
-				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.url, res.err)
+				log.Fatal("エラー", res.err)
 			}
 
 		case req := <-c.req:
@@ -68,7 +68,7 @@ func (c *crawler) collectHTML() {
 			case 0:
 				break
 			case 1:
-				go getPage(baseURL, c)
+				go createPage(baseURL, req.rank, c)
 			default:
 				go createRequest(baseURL, req.depth, c)
 			}
@@ -84,7 +84,6 @@ func (c *crawler) collectHTML() {
 	log.Println("スクレイピング完了")
 }
 
-// Crawl クロールする
 func createRequest(u *url.URL, depth int, c *crawler) {
 	defer func() { c.quit <- 0 }()
 
@@ -103,17 +102,18 @@ func createRequest(u *url.URL, depth int, c *crawler) {
 	})
 
 	if err == nil {
-		for _, url := range urls {
+		for i, url := range urls {
 			// 新しいリクエスト送信
 			c.req <- &request{
 				url:   url,
+				rank:  i + 1,
 				depth: depth - 1,
 			}
 		}
 	}
 }
 
-func getPage(u *url.URL, c *crawler) {
+func createPage(u *url.URL, rank int, c *crawler) {
 	defer func() { c.quit <- 0 }()
 
 	doc, err := getDoc(u)
@@ -134,7 +134,7 @@ func getPage(u *url.URL, c *crawler) {
 		Title:     title,
 		URL:       url,
 		HTML:      html,
-		Rank:      1,
+		Rank:      rank,
 		TargetDay: time.Now(),
 	}
 	// 結果送信
