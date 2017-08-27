@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -16,8 +18,9 @@ type crawler struct {
 	quit chan int
 }
 type respons struct {
-	url string
-	err interface{}
+	url  string
+	html string
+	err  interface{}
 }
 type request struct {
 	url   string
@@ -41,6 +44,7 @@ func (c *crawler) execute() {
 		case res := <-c.res:
 			if res.err == nil {
 				fmt.Printf("%s\n", res.url)
+				fmt.Printf("%s\n", res.html)
 			} else {
 				fmt.Fprintf(os.Stderr, "Error %s\n%v\n", res.url, res.err)
 			}
@@ -72,12 +76,13 @@ func Crawl(url string, depth int, c *crawler) {
 	defer func() { c.quit <- 0 }()
 
 	// WebページからURLを取得
-	urls, err := Fetch(url)
+	urls, html, err := Fetch(url)
 
 	// 結果送信
 	c.res <- &respons{
-		url: url,
-		err: err,
+		url:  url,
+		html: html,
+		err:  err,
 	}
 
 	if err == nil {
@@ -91,7 +96,7 @@ func Crawl(url string, depth int, c *crawler) {
 	}
 }
 
-func Fetch(u string) (urls []string, err error) {
+func Fetch(u string) (urls []string, html string, err error) {
 	baseUrl, err := url.Parse(u)
 	if err != nil {
 		return
@@ -122,11 +127,32 @@ func Fetch(u string) (urls []string, err error) {
 			if exists {
 				reqUrl, err := baseUrl.Parse(href)
 				if err == nil {
+					// html取得------------------------------------------
+					html, err = getStaticFile(reqUrl.String())
+					if err != nil {
+						log.Fatal("エラー", err)
+					}
+					// -------------------------------------------------
 					urls = append(urls, reqUrl.String())
 				}
 			}
 		})
 	})
 
+	return
+}
+
+func getStaticFile(reqURL string) (file string, err error) {
+	res, err := http.Get(reqURL)
+	if err != nil {
+		return
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return
+	}
+	buf := bytes.NewBuffer(body)
+	file = buf.String()
 	return
 }
