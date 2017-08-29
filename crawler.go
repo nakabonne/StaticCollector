@@ -133,12 +133,18 @@ func createStaticFile(u *url.URL, rank int, wordID int, c *crawler) {
 	if err != nil {
 		return
 	}
+
 	title, err = getTitle(doc)
 	if err != nil {
 		return
 	}
-	url := u.String()
+	url := models.FormatURL(u.String())
 	page := models.FindPageByURL(mysqlDB, url)
+	if page == nil {
+		page = &models.Pages{URL: url}
+		page.Insert(mysqlDB)
+		page = models.FindPageByURL(mysqlDB, page.URL)
+	}
 	staticFile := &models.StaticFiles{
 		ID:        bson.NewObjectId(),
 		WordID:    wordID,

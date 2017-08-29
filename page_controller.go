@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 	"webCrawler/models"
@@ -24,11 +25,12 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("エラー：", err)
 	}
 
-	pageID := strings.Join(r.Form["page_id"], "")
-	keywordID := strings.Join(r.Form["keyword_id"], "")
+	pageID, _ := strconv.Atoi(strings.Join(r.Form["page_id"], ""))
+	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
 	fmt.Println(pageID, keywordID)
 
 	staticFiles := make([]*models.StaticFiles, 0)
+	staticFiles = models.FindStaticFilesBy(pageID, keywordID, mongoDB)
 	// TODO ①mongoからFindする
 	// ②日付順にView表示
 	// ③日付2つ選んで次男viewに渡す

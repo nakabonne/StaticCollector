@@ -3,24 +3,31 @@ package models
 import (
 	"database/sql"
 	"log"
+	"strings"
 )
 
 type Pages struct {
-	ID    int
-	URL   string
-	Title string
+	ID  int
+	URL string
 }
 
 // Insert インサートする
 func (p *Pages) Insert(db *sql.DB) {
-	query := "INSERT INTO pages (id, url, title) values(?, ?, ?)"
-	if _, err := db.Exec(query, p.ID, p.URL, p.Title); err != nil {
+	query := "INSERT INTO pages (id, url) values(?, ?)"
+	if _, err := db.Exec(query, p.ID, p.URL); err != nil {
 		log.Fatal("インサートエラー：", err)
 	}
 }
 
+func FormatURL(u string) string {
+	str := strings.Replace(u, "https://www.google.co.jp/url?q=", "", 1)
+	URLarray := strings.Split(str, "&")
+	return URLarray[0]
+}
+
 func FindPageByURL(db *sql.DB, u string) *Pages {
-	query := "SELECT * FROM `pages` WHERE `url` = " + u
+	query := "SELECT * FROM `pages` WHERE `url` = '" + u + "'"
+	log.Println(query)
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Fatal("クエリーエラー：", err)

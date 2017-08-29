@@ -31,8 +31,8 @@ func (p *StaticFiles) Insert(session *mgo.Session) {
 	col.Insert(p)
 }
 
-func FindStaticFilesBy(pageID int, wordID int, session *mgo.Session) []StaticFiles {
-	staticFiles := make([]StaticFiles, 0)
+func FindStaticFilesBy(pageID int, wordID int, session *mgo.Session) []*StaticFiles {
+	staticFiles := make([]*StaticFiles, 0)
 	col := getCollection(session)
 	if err := col.Find(bson.M{
 		"page_id": pageID,
