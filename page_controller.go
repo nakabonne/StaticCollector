@@ -41,7 +41,7 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	})*/
 	//a := time.Date(2001, 5, 31, 0, 0, 0, 0, time.Local)
 
-	temp := template.Must(template.ParseFiles("views/page/search.tmpl"))
+	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
 	if err := temp.Execute(w, staticFiles); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
