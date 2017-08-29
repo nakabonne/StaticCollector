@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 	"webCrawler/models"
 )
 
@@ -37,10 +36,10 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	// AdminLTE導入
 	// chart.jsでグラフ
 	// HTML比較
-	staticFiles = append(staticFiles, &models.StaticFiles{
+	/*staticFiles = append(staticFiles, &models.StaticFiles{
 		TargetDay: time.Now(),
 		Rank:      1,
-	})
+	})*/
 	//a := time.Date(2001, 5, 31, 0, 0, 0, 0, time.Local)
 
 	temp := template.Must(template.ParseFiles("views/page/search.tmpl"))
