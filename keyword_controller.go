@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -44,7 +43,20 @@ func crawl(w http.ResponseWriter, r *http.Request) {
 	}
 
 	word := strings.Join(r.Form["keyword"], "")
-	fmt.Println(word)
+
+	log.Println("検索ワード：", word)
+	word = strings.Replace(word, " ", "+", -1)
+	firstURL := "https://www.google.co.jp/search?rlz=1C5CHFA_enJP693JP693&q=" + string(word)
+	log.Println("検索URL：", firstURL)
+
+	c := newCrawler()
+	go c.collectHTML()
+	wordID := 1 // SQLから取得する
+	c.req <- &request{
+		url:    firstURL,
+		wordID: wordID,
+		depth:  2,
+	}
 
 	http.Redirect(w, r, "/keyword/crawl", 301)
 }
