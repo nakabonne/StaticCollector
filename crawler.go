@@ -22,7 +22,7 @@ type crawler struct {
 }
 type respons struct {
 	url  string
-	page *models.Pages
+	page *models.StaticFiles
 	err  interface{}
 }
 type request struct {
@@ -138,7 +138,7 @@ func createPage(u *url.URL, rank int, wordID int, c *crawler) {
 		return
 	}
 	url := u.String()
-	page := &models.Pages{
+	page := &models.StaticFiles{
 		ID:        bson.NewObjectId(),
 		WordID:    wordID,
 		Title:     title,

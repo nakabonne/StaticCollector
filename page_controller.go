@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func pageSearch(w http.ResponseWriter, r *http.Request) {
@@ -15,5 +17,12 @@ func pageSearch(w http.ResponseWriter, r *http.Request) {
 }
 
 func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
+	// リクエストをパース
+	if err := r.ParseForm(); err != nil {
+		log.Fatal("エラー：", err)
+	}
+
+	page_url := strings.Join(r.Form["page_url"], "")
+	fmt.Print(page_url)
 
 }
