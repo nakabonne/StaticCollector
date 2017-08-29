@@ -23,6 +23,7 @@ func main() {
 	http.HandleFunc("/crawl", crawl)
 	http.HandleFunc("/page/search", pageSearch)
 	http.HandleFunc("/page/competitor", pageCompetitorIndex)
+	http.HandleFunc("/page/comparison", pageComparison)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("ListenAndSearver:", err)

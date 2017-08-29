@@ -28,7 +28,7 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
 	fmt.Println(pageID, keywordID)
 
-	staticFiles := models.FindStaticFilesBy(pageID, keywordID, mongoDB)
+	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID, mongoDB)
 	// TODO ①mongoからFindする
 	// ②日付順にView表示
 	// ③日付2つ選んで次viewに渡す
@@ -46,5 +46,15 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
 
+func pageComparison(w http.ResponseWriter, r *http.Request) {
+	// TODO 仮のstaticFiles
+	staticFiles := make([]models.StaticFiles, 2)
+	staticFiles = append(staticFiles, *models.FindStaticFilesByPageWord(24, 1, mongoDB)[0], *models.FindStaticFilesByPageWord(24, 1, mongoDB)[0])
+	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/comparison.tmpl"))
+	if err := temp.Execute(w, staticFiles); err != nil {
+		log.Fatal("テンプレートエラー", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

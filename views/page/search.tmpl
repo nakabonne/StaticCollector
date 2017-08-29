@@ -25,9 +25,8 @@
   </div>
 </div>
 
-<ul>
   {{range .}}
-  <li>日にち{{.TargetDay}} 順位：{{.Rank}}</li>
+  日にち{{.TargetDay}} 順位：{{.Rank}}
 
   <div class="box box-danger">
   <div class="box-header with-border">
@@ -53,15 +52,15 @@
 
   // とある4週間分のデータログ
   var barChartData = {
-      labels: ["8/2", "8/3", "8/4", "8/5"],
+      labels: ["6/21", "6/28", "7/5", "7/12", "7/19", "7/26", "8/2", "8/9", "8/16", "8/23"],
       datasets: [
           {
               type: 'line',
               label: '順位',
-              data: [10,9,9,3],
+              data: [4,4,4,5,5,5,8,8,9,9],
               borderColor : "rgba(254,97,132,0.8)",
               backgroundColor : "rgba(254,97,132,0)",
-              yAxisID: "ctr",
+              yAxisID: "rank",
               tension: 0,
           },
       ],
@@ -76,12 +75,12 @@
       tooltips:{mode: 'label'},
       scales: {
           yAxes: [{
-              id: "ctr",   // Y軸のID
+              id: "rank",   // Y軸のID
               type: "linear",   // linear固定
               position: "left", // どちら側に表示される軸か？
               ticks: {          // スケール
-                  max: 10,
-                  min: 0,
+                  max: 1,
+                  min: 10,
                   stepSize: 1
               },
           }],
@@ -106,5 +105,4 @@
 
 
   {{end}}
-</ul>
 {{end}}

@@ -31,12 +31,25 @@ func (p *StaticFiles) Insert(session *mgo.Session) {
 	col.Insert(p)
 }
 
-func FindStaticFilesBy(pageID int, wordID int, session *mgo.Session) []*StaticFiles {
+// TODO Find系はinterfaceとか使って一元化する
+func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*StaticFiles {
 	staticFiles := make([]*StaticFiles, 0)
 	col := getCollection(session)
 	if err := col.Find(bson.M{
 		"page_id": pageID,
 		"word_id": wordID,
+	}).All(&staticFiles); err != nil {
+		log.Fatal("エラー", err)
+	}
+	return staticFiles
+}
+
+func FindStaticFilesByPageTargetday(pageID int, targetDay time.Time, session *mgo.Session) []*StaticFiles {
+	staticFiles := make([]*StaticFiles, 0)
+	col := getCollection(session)
+	if err := col.Find(bson.M{
+		"page_id":    pageID,
+		"target_day": targetDay,
 	}).All(&staticFiles); err != nil {
 		log.Fatal("エラー", err)
 	}
