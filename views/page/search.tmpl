@@ -37,9 +37,9 @@
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>LT</span>
+      <span class="logo-mini"><b>N</b>KO</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>LTE</span>
+      <span class="logo-lg"><b>Naka</b>o</span>
     </a>
 
     <!-- Header Navbar -->
@@ -279,17 +279,31 @@
     <section class="content">
 
       <!-- Your Page Content Here -->
-      <form action="/page/competitor" method="post">
-        URL
-        <select name="page_id">
-          <option value="1">永久脱毛の平均費用はいくら？ひと目で分かる料金早見表</option>
-        </select>
-        キーワード
-        <select name="keyword_id">
-          <option value="1">脱毛料金</option>
-        </select>
-        <input type="submit" value="検索">
-      </form>
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">検索条件</h3>&nbsp;&nbsp;
+        </div>
+
+        <div class="box-body">
+          <div class="form-group">
+            <form action="/page/competitor" method="post">
+              <div class="form-group">
+                URL
+                <select name="page_id" class="form-control select2">
+                  <option value="1">http://www.geocities.jp/m_hiroi/golang/abcgo12.html</option>
+                </select>
+              </div>
+              <div class="form-group">
+                キーワード
+                <select name="keyword_id" class="form-control select2">
+                  <option value="1">脱毛料金</option>
+                </select>
+              </div>
+              <input type="submit" value="検索" class="btn btn-md btn-primary">
+            </form>
+          </div>
+        </div>
+      </div>
 
       <ul>
         {{range .}}
@@ -325,6 +339,12 @@
   <script src="../lib/assets/adminlte/bootstrap/js/bootstrap.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../lib/assets/adminlte/dist/js/app.min.js"></script>
+
+  <script>
+  $(function () {
+    $(".select2").select2();
+  });
+  </script>
 
   </body>
 </html>
