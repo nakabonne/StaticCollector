@@ -1,9 +1,21 @@
 <html>
   <body>
     <form action="/page/competitor" method="post">
-      競合分析
-      <input name="page_url" type="text"></input>
+      URL
+      <select name="page_id">
+        <option value="1">永久脱毛の平均費用はいくら？ひと目で分かる料金早見表</option>
+      </select>
+      キーワード
+      <select name="keyword_id">
+        <option value="1">脱毛料金</option>
+      </select>
       <input type="submit" value="検索">
     </form>
+
+    <ul>
+      {{range .}}
+      <li>日にち{{.TargetDay}} 順位：{{.Rank}}</li>
+      {{end}}
+    </ul>
   </body>
 </html>

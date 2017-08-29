@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
+	"webCrawler/models"
 )
 
 func pageSearch(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +24,27 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("エラー：", err)
 	}
 
-	page_url := strings.Join(r.Form["page_url"], "")
-	fmt.Print(page_url)
+	pageID := strings.Join(r.Form["page_id"], "")
+	keywordID := strings.Join(r.Form["keyword_id"], "")
+	fmt.Println(pageID, keywordID)
+
+	staticFiles := make([]*models.StaticFiles, 0)
+	// TODO ①mongoからFindする
+	// ②日付順にView表示
+	// ③日付2つ選んで次男viewに渡す
+	// AdminLTE導入
+	// chart.jsでグラフ
+	// HTML比較
+	staticFiles = append(staticFiles, &models.StaticFiles{
+		TargetDay: time.Now(),
+		Rank:      1,
+	})
+	//a := time.Date(2001, 5, 31, 0, 0, 0, 0, time.Local)
+
+	temp := template.Must(template.ParseFiles("views/page/search.tmpl"))
+	if err := temp.Execute(w, staticFiles); err != nil {
+		log.Fatal("テンプレートエラー", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 }

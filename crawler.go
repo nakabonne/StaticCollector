@@ -21,9 +21,9 @@ type crawler struct {
 	quit chan int
 }
 type respons struct {
-	url  string
-	page *models.StaticFiles
-	err  interface{}
+	url        string
+	staticFile *models.StaticFiles
+	err        interface{}
 }
 type request struct {
 	url    string
@@ -50,8 +50,8 @@ func (c *crawler) collectHTML() {
 
 		case res := <-c.res:
 			if res.err == nil {
-				fmt.Println("構造体は", res.page)
-				res.page.Insert(mongoDB)
+				fmt.Println("構造体は", res.staticFile)
+				res.staticFile.Insert(mongoDB)
 			} else {
 				log.Fatal("エラー", res.err)
 			}
@@ -77,7 +77,7 @@ func (c *crawler) collectHTML() {
 			case 0:
 				break
 			case 1:
-				go createPage(baseURL, req.rank, wordID, c)
+				go createStaticFile(baseURL, req.rank, wordID, c)
 			default:
 				go createRequest(baseURL, req.depth, c)
 			}
@@ -122,7 +122,7 @@ func createRequest(u *url.URL, depth int, c *crawler) {
 	}
 }
 
-func createPage(u *url.URL, rank int, wordID int, c *crawler) {
+func createStaticFile(u *url.URL, rank int, wordID int, c *crawler) {
 	defer func() { c.quit <- 0 }()
 
 	doc, err := getDoc(u)
@@ -138,19 +138,20 @@ func createPage(u *url.URL, rank int, wordID int, c *crawler) {
 		return
 	}
 	url := u.String()
-	page := &models.StaticFiles{
+	page := models.FindPageByURL(mysqlDB, url)
+	staticFile := &models.StaticFiles{
 		ID:        bson.NewObjectId(),
 		WordID:    wordID,
+		PageID:    page.ID,
 		Title:     title,
-		URL:       url,
 		HTML:      html,
 		Rank:      rank,
 		TargetDay: time.Now(),
 	}
 	// 結果送信
 	c.res <- &respons{
-		page: page,
-		err:  err,
+		staticFile: staticFile,
+		err:        err,
 	}
 }
 

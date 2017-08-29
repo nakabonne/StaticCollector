@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"time"
 
 	mgo "gopkg.in/mgo.v2"
@@ -11,18 +12,35 @@ import (
 type StaticFiles struct {
 	ID        bson.ObjectId `bson:"_id"`
 	WordID    int           `bson:"word_id"`
+	PageID    int           `bson:"page_id"`
 	Title     string        `bson:"title"`
-	URL       string        `bson:"url"`
 	HTML      string        `bson:"html"`
 	Rank      int           `bson:"rank"`
 	TargetDay time.Time     `bson:"target_day"`
 }
 
-// Insert インサート
-func (p *StaticFiles) Insert(session *mgo.Session) {
+func getCollection(session *mgo.Session) *mgo.Collection {
 	db := session.DB("web_crawler")
 	col := db.C("static_files")
+	return col
+}
+
+// Insert インサート
+func (p *StaticFiles) Insert(session *mgo.Session) {
+	col := getCollection(session)
 	col.Insert(p)
+}
+
+func FindStaticFilesBy(pageID int, wordID int, session *mgo.Session) []StaticFiles {
+	staticFiles := make([]StaticFiles, 0)
+	col := getCollection(session)
+	if err := col.Find(bson.M{
+		"page_id": pageID,
+		"word_id": wordID,
+	}).All(&staticFiles); err != nil {
+		log.Fatal("エラー", err)
+	}
+	return staticFiles
 }
 
 // 検索方法はこちら↓
