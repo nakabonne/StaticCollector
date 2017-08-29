@@ -11,7 +11,7 @@ import (
 )
 
 func pageSearch(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("views/page/search.tmpl"))
+	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
 	if err := temp.Execute(w, nil); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
