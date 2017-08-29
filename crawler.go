@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -50,16 +49,13 @@ func (c *crawler) collectHTML() {
 
 		case res := <-c.res:
 			if res.err == nil {
-				fmt.Println("構造体は", res.staticFile)
+				//fmt.Println("構造体は", res.staticFile)
 				res.staticFile.Insert(mongoDB)
 			} else {
 				log.Fatal("エラー", res.err)
 			}
 
 		case req := <-c.req:
-			if wordID != 0 {
-				//wordID = req.wordID
-			}
 			if urlMap[req.url] {
 				// 取得済み
 				break
