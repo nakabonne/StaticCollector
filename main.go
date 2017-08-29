@@ -39,6 +39,8 @@ func main() {
 
 	http.HandleFunc("/keyword/insert", keywordInsert)
 	http.HandleFunc("/keyword/create", keywordCreate)
+	http.HandleFunc("/page/search", pageSearch)
+	http.HandleFunc("/page/search/competitor", pageCompetitorIndex)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("ListenAndSearver:", err)
