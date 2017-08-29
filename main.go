@@ -36,7 +36,7 @@ func main() {
 		depth:  2,
 	}
 	// -----------------------------
-
+	http.Handle("/lib/assets/", http.StripPrefix("/lib/assets/", http.FileServer(http.Dir("lib/assets/"))))
 	http.HandleFunc("/keyword/insert", keywordInsert)
 	http.HandleFunc("/keyword/create", keywordCreate)
 	http.HandleFunc("/page/search", pageSearch)
