@@ -28,11 +28,10 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
 	fmt.Println(pageID, keywordID)
 
-	staticFiles := make([]*models.StaticFiles, 0)
-	staticFiles = models.FindStaticFilesBy(pageID, keywordID, mongoDB)
+	staticFiles := models.FindStaticFilesBy(pageID, keywordID, mongoDB)
 	// TODO ①mongoからFindする
 	// ②日付順にView表示
-	// ③日付2つ選んで次男viewに渡す
+	// ③日付2つ選んで次viewに渡す
 	// AdminLTE導入
 	// chart.jsでグラフ
 	// HTML比較
