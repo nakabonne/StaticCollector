@@ -1,9 +1,16 @@
 {{define "content"}}
+<link rel="stylesheet" href="../../lib/assets/adminlte/dist/css/AdminLTE.min.css">
+
 <div class="row row-eq-height">
   {{range .}}
   <div class="col-md-6">
+    <p>{{.TargetDay}}</p>
+    <pre><code class="prettyprint linenums">
     {{.HTML}}
+    </code></pre>
   </div>
   {{end}}
 </div>
+
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 {{end}}
