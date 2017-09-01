@@ -77,8 +77,8 @@
   var days = new Array(1);
   var ranks = new Array(1);
   {{range .StaticFiles}}
-    ranks.unshift({{.Rank}});
-    days.unshift({{.TargetDay}})
+    ranks.push({{.Rank}});
+    days.push({{.TargetDay}})
   {{end}}
   var barChartData = {
       labels: days,
