@@ -54,12 +54,12 @@
   <div class="box-body">
     <div class="form-group">
       <div class="form-group">
-        <form action="/page/comparison" method="get">
+        <form action="/page/comparison" method="post">
           <input type="hidden" name="page_id" value="{{.PageID}}">
           <input type="hidden" name="keyword_id" value="{{.KeywordID}}">
           <div class="form-group">
-            {{range $i, $v := .StaticFiles}}
-              {{.TargetDay}}<input type="checkbox" name="day_{{$i}}" value="{{.TargetDay}}">
+            {{range .StaticFiles}}
+              {{.TargetDay}}<input type="checkbox" name="days[]" value="{{.TargetDay}}">
             {{end}}
           </div>
 

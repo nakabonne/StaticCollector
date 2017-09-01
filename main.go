@@ -25,6 +25,8 @@ func main() {
 	http.HandleFunc("/page/competitor", pageCompetitorIndex)
 	http.HandleFunc("/page/comparison", pageComparison)
 
+	log.Println("準備OK")
+
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal("ListenAndSearver:", err)
 	}

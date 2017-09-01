@@ -44,16 +44,17 @@ func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*
 	return staticFiles
 }
 
-func FindStaticFilesByPageTargetday(pageID int, targetDay time.Time, session *mgo.Session) []*StaticFiles {
+func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time, session *mgo.Session) *StaticFiles {
 	staticFiles := make([]*StaticFiles, 0)
 	col := getCollection(session)
 	if err := col.Find(bson.M{
 		"page_id":    pageID,
+		"word_id":    wordID,
 		"target_day": targetDay,
 	}).All(&staticFiles); err != nil {
 		log.Fatal("エラー", err)
 	}
-	return staticFiles
+	return staticFiles[0]
 }
 
 // 検索方法はこちら↓
