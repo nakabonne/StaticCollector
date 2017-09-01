@@ -55,17 +55,12 @@
     <div class="form-group">
       <div class="form-group">
         <form action="/page/comparison" method="get">
+          <input type="hidden" name="page_id" value="{{.PageID}}">
+          <input type="hidden" name="keyword_id" value="{{.KeywordID}}">
           <div class="form-group">
-            6/21<input type="checkbox" class="minimal">
-            6/28<input type="checkbox">
-            7/5<input type="checkbox">
-            7/12<input type="checkbox">
-            7/19<input type="checkbox">
-            7/26<input type="checkbox">
-            8/2<input type="checkbox">
-            8/9<input type="checkbox">
-            8/18<input type="checkbox">
-            8/23<input type="checkbox">
+            {{range $i, $v := .StaticFiles}}
+              {{.TargetDay}}<input type="checkbox" name="day_{{$i}}" value="{{.TargetDay}}">
+            {{end}}
           </div>
 
           <input type="submit" value="比較" class="btn btn-md btn-primary">
@@ -107,11 +102,14 @@
       tooltipTitleFontStyle : "normal",
       maintainAspectRatio: false,
       tooltips:{mode: 'label'},
+      vAxis: {direction:-1}, // Y軸を逆方向にする
+      hAxis: {direction:-1},  // X軸を逆方向にする
       scales: {
           yAxes: [{
               id: "rank",   // Y軸のID
               type: "linear",   // linear固定
               position: "left", // どちら側に表示される軸か？
+              direction: -1,
               ticks: {          // スケール
                   max: 1,
                   min: 10,
