@@ -29,8 +29,7 @@
   </div>
 </div>
 
-  {{range .StaticFiles}}
-  日にち{{.TargetDay}} 順位：{{.Rank}}
+  {{if .StaticFiles -}}
 
   <div class="box box-danger">
   <div class="box-header with-border">
@@ -80,12 +79,12 @@
 
   // とある4週間分のデータログ
   var barChartData = {
-      labels: ["6/21", "6/28", "7/5", "7/12", "7/19", "7/26", "8/2", "8/9", "8/16", "8/23"],
+      labels: {{.Days}},
       datasets: [
           {
               type: 'line',
               label: '順位',
-              data: [4,4,4,5,5,5,8,8,9,9],
+              data: [3],
               borderColor : "rgba(254,97,132,0.8)",
               backgroundColor : "rgba(254,97,132,0)",
               yAxisID: "rank",
@@ -116,7 +115,6 @@
   };
 
   $(function() {
-      console.log('graph開始');
       ctx = document.getElementById("canvas").getContext("2d");
       ctx.fillStyle = "rgb(200,0,0)";
       ctx.fillRect(20, 30, 60, 40);
@@ -125,7 +123,6 @@
           data: barChartData,
           options: complexChartOption
       });
-      console.log('graph完了');
   });
 
 

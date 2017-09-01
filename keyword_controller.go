@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"webCrawler/models"
 )
@@ -43,7 +45,9 @@ func crawl(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("エラー：", err)
 	}
 
-	word := strings.Join(r.Form["keyword"], "")
+	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
+	word := models.FindKeyword(mysqlDB, keywordID).Word
+	fmt.Println("ワードは", word)
 
 	log.Println("検索ワード：", word)
 	word = strings.Replace(word, " ", "+", -1)
@@ -52,7 +56,7 @@ func crawl(w http.ResponseWriter, r *http.Request) {
 
 	c := newCrawler()
 	go c.collectHTML()
-	wordID := 1 // SQLから取得する
+	wordID := keywordID // SQLから取得する
 	c.req <- &request{
 		url:    firstURL,
 		wordID: wordID,

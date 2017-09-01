@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"log"
+	"strconv"
 )
 
 // キーワードを管理
@@ -40,4 +41,30 @@ func AllKeywords(db *sql.DB) []*Keywords {
 	}
 	rows.Close()
 	return keywords
+}
+
+func FindKeyword(db *sql.DB, id int) *Keywords {
+
+	query := "SELECT * FROM `keywords` WHERE `id` = " + strconv.Itoa(id)
+	log.Println(query)
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Fatal("クエリーエラー：", err)
+	}
+
+	var keyword *Keywords
+
+	for rows.Next() {
+		var (
+			id   int
+			word string
+		)
+		if err := rows.Scan(&id, &word); err != nil {
+			log.Fatal("スキャンエラー: ", err)
+		}
+		keyword = &Keywords{ID: id, Word: word}
+	}
+	rows.Close()
+	return keyword
+
 }

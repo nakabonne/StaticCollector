@@ -12,6 +12,7 @@ import (
 
 type searchPages struct {
 	StaticFiles []*models.StaticFiles
+	Days        []string
 	Pages       []*models.Pages
 	Keywords    []*models.Keywords
 }
@@ -38,10 +39,15 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(pageID, keywordID)
 
 	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID, mongoDB)
+	days := make([]string, len(staticFiles))
+	for _, v := range staticFiles {
+		days = append(days, v.TargetDay.Format("2006/01/02 Mon"))
+	}
 
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
 	if err := temp.Execute(w, &searchPages{
 		StaticFiles: staticFiles,
+		Days:        days,
 		Pages:       models.AllPages(mysqlDB),
 		Keywords:    models.AllKeywords(mysqlDB),
 	}); err != nil {
