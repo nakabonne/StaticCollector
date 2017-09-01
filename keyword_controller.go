@@ -29,8 +29,9 @@ func keywordCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func keywordCrawl(w http.ResponseWriter, r *http.Request) {
+	keywords := models.AllKeywords(mysqlDB)
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/keyword/crawl.tmpl"))
-	if err := temp.Execute(w, nil); err != nil {
+	if err := temp.Execute(w, keywords); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

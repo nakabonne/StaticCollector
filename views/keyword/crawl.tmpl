@@ -1,7 +1,11 @@
 {{define "content"}}
     <h2>キーワードを選択して下さい</h2>
     <form action="/crawl" method="post">
-      <input name="keyword" type="text"></input>
+      <select name="keyword" class="form-control select2">
+        {{range .}}
+        <option value="{{.Word}}">{{.Word}}</option>
+        {{end}}
+      </select>
       <input type="submit" value="実行">
     </form>
 {{end}}
