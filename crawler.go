@@ -21,7 +21,7 @@ type crawler struct {
 }
 type respons struct {
 	url        string
-	staticFile *models.StaticFiles
+	staticFile *models.StaticFile
 	err        interface{}
 }
 type request struct {
@@ -141,7 +141,7 @@ func createStaticFile(u *url.URL, rank int, wordID int, c *crawler) {
 		page.Insert(mysqlDB)
 		page = models.FindPageByURL(mysqlDB, page.URL)
 	}
-	staticFile := &models.StaticFiles{
+	staticFile := &models.StaticFile{
 		ID:        bson.NewObjectId(),
 		WordID:    wordID,
 		PageID:    page.ID,

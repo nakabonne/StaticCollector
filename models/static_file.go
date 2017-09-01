@@ -9,7 +9,7 @@ import (
 )
 
 // Pages ページを管理
-type StaticFiles struct {
+type StaticFile struct {
 	ID        bson.ObjectId `bson:"_id"`
 	WordID    int           `bson:"word_id"`
 	PageID    int           `bson:"page_id"`
@@ -26,14 +26,14 @@ func getCollection(session *mgo.Session) *mgo.Collection {
 }
 
 // Insert インサート
-func (p *StaticFiles) Insert(session *mgo.Session) {
+func (p *StaticFile) Insert(session *mgo.Session) {
 	col := getCollection(session)
 	col.Insert(p)
 }
 
 // TODO Find系はinterfaceとか使って一元化する
-func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*StaticFiles {
-	staticFiles := make([]*StaticFiles, 0)
+func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*StaticFile {
+	staticFiles := make([]*StaticFile, 0)
 	col := getCollection(session)
 	if err := col.Find(bson.M{
 		"page_id": pageID,
@@ -44,8 +44,8 @@ func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*
 	return staticFiles
 }
 
-func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time, session *mgo.Session) *StaticFiles {
-	staticFiles := make([]*StaticFiles, 0)
+func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time, session *mgo.Session) *StaticFile {
+	staticFiles := make([]*StaticFile, 0)
 	col := getCollection(session)
 	if err := col.Find(bson.M{
 		"page_id":    pageID,

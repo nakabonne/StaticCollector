@@ -12,7 +12,7 @@ import (
 )
 
 type searchPages struct {
-	StaticFiles []*models.StaticFiles
+	StaticFiles []*models.StaticFile
 	Pages       []*models.Pages
 	Keywords    []*models.Keywords
 	PageID      int
@@ -79,7 +79,7 @@ func pageComparison(w http.ResponseWriter, r *http.Request) {
 	//hei := strings.Join(r.Form["page_id"], "")
 
 	// TODO 仮のstaticFiles
-	staticFiles := make([]models.StaticFiles, 0)
+	staticFiles := make([]models.StaticFile, 0)
 	//staticFiles = append(staticFiles, *models.FindStaticFilesByPageWord(8, 1, mongoDB)[0], *models.FindStaticFilesByPageWord(8, 1, mongoDB)[0])
 	staticFiles = append(staticFiles, *models.FindStaticFilesByPageWordTargetday(pageID, keywordID, targetDay0, mongoDB))
 	staticFiles = append(staticFiles, *models.FindStaticFilesByPageWordTargetday(pageID, keywordID, targetDay1, mongoDB))
