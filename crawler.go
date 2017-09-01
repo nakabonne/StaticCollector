@@ -137,7 +137,7 @@ func createStaticFile(u *url.URL, rank int, wordID int, c *crawler) {
 	url := models.FormatURL(u.String())
 	page := models.FindPageByURL(mysqlDB, url)
 	if page == nil {
-		page = &models.Pages{URL: url}
+		page = &models.Page{URL: url}
 		page.Insert(mysqlDB)
 		page = models.FindPageByURL(mysqlDB, page.URL)
 	}
