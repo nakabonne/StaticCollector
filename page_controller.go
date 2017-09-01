@@ -10,15 +10,18 @@ import (
 	"webCrawler/models"
 )
 
-type searchPage struct {
-	staticFiles []*models.StaticFiles
-	page        []*models.Pages
-	keyword     []*models.Keywords
+type searchPages struct {
+	StaticFiles []*models.StaticFiles
+	Pages       []*models.Pages
+	Keywords    []*models.Keywords
 }
 
 func pageSearch(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
-	if err := temp.Execute(w, nil); err != nil {
+	if err := temp.Execute(w, &searchPages{
+		Pages:    models.AllPages(mysqlDB),
+		Keywords: models.AllKeywords(mysqlDB),
+	}); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -35,15 +38,13 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(pageID, keywordID)
 
 	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID, mongoDB)
-	// HTML比較
-	/*staticFiles = append(staticFiles, &models.StaticFiles{
-		TargetDay: time.Now(),
-		Rank:      1,
-	})*/
-	//a := time.Date(2001, 5, 31, 0, 0, 0, 0, time.Local)
 
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
-	if err := temp.Execute(w, staticFiles); err != nil {
+	if err := temp.Execute(w, &searchPages{
+		StaticFiles: staticFiles,
+		Pages:       models.AllPages(mysqlDB),
+		Keywords:    models.AllKeywords(mysqlDB),
+	}); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

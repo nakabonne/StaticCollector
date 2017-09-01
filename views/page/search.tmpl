@@ -10,13 +10,17 @@
         <div class="form-group">
           URL
           <select name="page_id" class="form-control select2">
-            <option value="24">http://www.geocities.jp/m_hiroi/golang/abcgo12.html</option>
+            {{range .Pages}}
+            <option value="{{.ID}}">{{.URL}}</option>
+            {{end}}
           </select>
         </div>
         <div class="form-group">
           キーワード
           <select name="keyword_id" class="form-control select2">
-            <option value="1">脱毛料金</option>
+            {{range .Keywords}}
+            <option value="{{.ID}}">{{.Word}}</option>
+            {{end}}
           </select>
         </div>
         <input type="submit" value="検索" class="btn btn-md btn-primary">
@@ -25,7 +29,7 @@
   </div>
 </div>
 
-  {{range .}}
+  {{range .StaticFiles}}
   日にち{{.TargetDay}} 順位：{{.Rank}}
 
   <div class="box box-danger">
