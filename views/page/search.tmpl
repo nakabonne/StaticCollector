@@ -75,16 +75,23 @@
   </div>
 </div>
 
+
 <script>
 
   // とある4週間分のデータログ
+  var days = new Array(1);
+  var ranks = new Array(1);
+  {{range .StaticFiles}}
+    ranks.unshift({{.Rank}});
+    days.unshift({{.TargetDay}})
+  {{end}}
   var barChartData = {
-      labels: {{.Days}},
+      labels: days,
       datasets: [
           {
               type: 'line',
               label: '順位',
-              data: [3],
+              data: ranks,
               borderColor : "rgba(254,97,132,0.8)",
               backgroundColor : "rgba(254,97,132,0)",
               yAxisID: "rank",
