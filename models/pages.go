@@ -19,6 +19,30 @@ func (p *Pages) Insert(db *sql.DB) {
 	}
 }
 
+// AllPages Pagesテーブルから全件取得
+func AllPages(db *sql.DB) []*Pages {
+	rows, err := db.Query("SELECT * FROM `pages`")
+	if err != nil {
+		log.Fatal("クエリーエラー：", err)
+		// なんか返す
+	}
+
+	pages := []*Pages{}
+
+	for rows.Next() {
+		var (
+			id  int
+			url string
+		)
+		if err := rows.Scan(&id, &url); err != nil {
+			log.Fatal("スキャンエラー: ", err)
+		}
+		pages = append(pages, &Pages{ID: id, URL: url})
+	}
+	rows.Close()
+	return pages
+}
+
 func FormatURL(u string) string {
 	str := strings.Replace(u, "https://www.google.co.jp/url?q=", "", 1)
 	URLarray := strings.Split(str, "&")

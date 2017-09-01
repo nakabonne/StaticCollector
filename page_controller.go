@@ -10,6 +10,12 @@ import (
 	"webCrawler/models"
 )
 
+type searchPage struct {
+	staticFiles []*models.StaticFiles
+	page        []*models.Pages
+	keyword     []*models.Keywords
+}
+
 func pageSearch(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
 	if err := temp.Execute(w, nil); err != nil {
@@ -29,11 +35,6 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(pageID, keywordID)
 
 	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID, mongoDB)
-	// TODO ①mongoからFindする
-	// ②日付順にView表示
-	// ③日付2つ選んで次viewに渡す
-	// AdminLTE導入
-	// chart.jsでグラフ
 	// HTML比較
 	/*staticFiles = append(staticFiles, &models.StaticFiles{
 		TargetDay: time.Now(),
