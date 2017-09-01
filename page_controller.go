@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -12,7 +13,7 @@ import (
 )
 
 type searchPages struct {
-	StaticFiles []*models.StaticFile
+	StaticFiles models.StaticFiles
 	Pages       []*models.Page
 	Keywords    []*models.Keyword
 	PageID      int
@@ -45,15 +46,16 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	for _, v := range staticFiles {
 		days = append(days, v.TargetDay.Format("2006/01/02 Mon"))
 	}*/
-
-	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
-	if err := temp.Execute(w, &searchPages{
+	searchPages := &searchPages{
 		StaticFiles: staticFiles,
 		Pages:       models.AllPages(mysqlDB),
 		Keywords:    models.AllKeywords(mysqlDB),
 		PageID:      pageID,
 		KeywordID:   keywordID,
-	}); err != nil {
+	}
+	sort.Sort(searchPages.StaticFiles)
+	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
+	if err := temp.Execute(w, searchPages); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
