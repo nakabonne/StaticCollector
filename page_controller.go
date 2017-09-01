@@ -14,7 +14,7 @@ import (
 type searchPages struct {
 	StaticFiles []*models.StaticFile
 	Pages       []*models.Page
-	Keywords    []*models.Keywords
+	Keywords    []*models.Keyword
 	PageID      int
 	KeywordID   int
 }
