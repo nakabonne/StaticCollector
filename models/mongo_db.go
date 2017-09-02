@@ -9,10 +9,9 @@ import (
 var mongoSession *mgo.Session
 var mongoDB *mgo.Database
 
-func dialMongo() error {
-	var err error
+func dialMongo() (err error) {
 	mongoSession, err = mgo.Dial("mongodb://localhost/")
-	return err
+	return
 }
 func setMongoDB() {
 	mongoDB = mongoSession.DB("web_crawler")

@@ -7,10 +7,9 @@ import (
 
 var mysqlDB *sql.DB
 
-func openMysql() error {
-	var err error
+func openMysql() (err error) {
 	mysqlDB, err = sql.Open("mysql", "root:Tsuba2896@/web_crawler")
-	return err
+	return
 }
 func closeMysql() {
 	mysqlDB.Close()
