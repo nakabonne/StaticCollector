@@ -13,6 +13,9 @@ func main() {
 	defer models.CloseDB()
 
 	http.Handle("/lib/assets/", http.StripPrefix("/lib/assets/", http.FileServer(http.Dir("lib/assets/"))))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/page/search", 301)
+	})
 	http.HandleFunc("/keyword/insert", keywordInsert)
 	http.HandleFunc("/keyword/create", keywordCreate)
 	http.HandleFunc("/keyword/crawl", keywordCrawl)
