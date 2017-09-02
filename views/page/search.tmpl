@@ -73,89 +73,89 @@
 
 
 <script>
-$(function() {
-  var days = new Array(1);
-  var ranks = new Array(1);
-  {{range .StaticFiles}}
-    ranks.push({{.Rank}});
-    days.push({{.TargetDay}})
-  {{end}}
-  // 日付のフォーマットを1/1という形式にする
-  var target_days = $('#target_days');
-  for(var i = 1; i < days.length; i++) {
-    day = days[i].split("T")[0].split("-")[1] + "/" + days[i].split("T")[0].split("-")[2]
+  $(function() {
+    var days = new Array(1);
+    var ranks = new Array(1);
+    {{range .StaticFiles}}
+      ranks.push({{.Rank}});
+      days.push({{.TargetDay}})
+    {{end}}
+    // 日付のフォーマットを1/1という形式にする
+    var target_days = $('#target_days');
+    for(var i = 1; i < days.length; i++) {
+      day = days[i].split("T")[0].split("-")[1] + "/" + days[i].split("T")[0].split("-")[2]
 
-    var chkboxstr = '<label for="days_' + i + '">' + day + '</label>' + '<input type="checkbox" name="days[]" class="minimal" value="' + days[i] + '">';
-    target_days.append(chkboxstr);
+      var chkboxstr = '<label for="days_' + i + '">' + day + '</label>' + '<input type="checkbox" name="days[]" class="minimal" value="' + days[i] + '">';
+      target_days.append(chkboxstr);
 
-    days[i] = day
-  }
-
-  var barChartData = {
-    labels: days,
-    datasets: [
-      {
-        type: 'line',
-        label: '順位',
-        data: ranks,
-        borderColor : "rgba(254,97,132,0.8)",
-        backgroundColor : "rgba(254,97,132,0)",
-        yAxisID: "rank",
-        tension: 0,
-      },
-    ],
-  };
-
-  var complexChartOption = {
-    responsive: true,
-    tooltipTitleFontStyle : "normal",
-    maintainAspectRatio: false,
-    tooltips:{mode: 'label'},
-    scales: {
-      yAxes: [{
-        id: "rank",   // Y軸のID
-        type: "linear",   // linear固定
-        position: "left", // どちら側に表示される軸か？
-        direction: -1,
-        ticks: {          // スケール
-          max: 1,
-          min: 10,
-          stepSize: 1
-        },
-      }],
+      days[i] = day
     }
-  };
 
-  ctx = document.getElementById("canvas").getContext("2d");
-  ctx.fillStyle = "rgb(200,0,0)";
-  ctx.fillRect(20, 30, 60, 40);
-  window.myBar = new Chart(ctx, {
-    type: 'line',
-    data: barChartData,
-    options: complexChartOption
+    var barChartData = {
+      labels: days,
+      datasets: [
+        {
+          type: 'line',
+          label: '順位',
+          data: ranks,
+          borderColor : "rgba(254,97,132,0.8)",
+          backgroundColor : "rgba(254,97,132,0)",
+          yAxisID: "rank",
+          tension: 0,
+        },
+      ],
+    };
+
+    var complexChartOption = {
+      responsive: true,
+      tooltipTitleFontStyle : "normal",
+      maintainAspectRatio: false,
+      tooltips:{mode: 'label'},
+      scales: {
+        yAxes: [{
+          id: "rank",   // Y軸のID
+          type: "linear",   // linear固定
+          position: "left", // どちら側に表示される軸か？
+          direction: -1,
+          ticks: {          // スケール
+            max: 1,
+            min: 10,
+            stepSize: 1
+          },
+        }],
+      }
+    };
+
+    ctx = document.getElementById("canvas").getContext("2d");
+    ctx.fillStyle = "rgb(200,0,0)";
+    ctx.fillRect(20, 30, 60, 40);
+    window.myBar = new Chart(ctx, {
+      type: 'line',
+      data: barChartData,
+      options: complexChartOption
+    });
+
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
   });
 
-  $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-    checkboxClass: 'icheckbox_minimal-red',
-    radioClass: 'iradio_minimal-red'
-  });
+  //チェックボックスをクリックするとイベント発火
+  $('input[type="checkbox"]').click(function(){
+    var $count = $("input[type=checkbox]:checked").length;
+    var $not = $('input[type=checkbox]').not(':checked')
 
+    //チェックが2つ付いたら、チェックされてないチェックボックスにdisabledを加える
+    if($count >= 2) {
+      $not.attr("disabled",true);
+    }else{
+      //3つ以下ならisabledを外す
+      $not.attr("disabled",false);
+    }
 });
 
-//チェックボックスをクリックするとイベント発火
-$('input[type="checkbox"].minimal').click(function(){
-  alert("へい");
-  var $count = $("input[type=checkbox]:checked").length;
-  var $not = $('input[type=checkbox]').not(':checked')
 
-  //チェックが2つ付いたら、チェックされてないチェックボックスにdisabledを加える
-  if($count >= 2) {
-    $not.attr("disabled",true);
-  }else{
-    //3つ以下ならisabledを外す
-    $not.attr("disabled",false);
-  }
-});
 </script>
 
 
