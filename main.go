@@ -12,7 +12,7 @@ func main() {
 	models.OpenDB()
 	defer models.CloseDB()
 
-	//http.Handle("/lib/assets/", http.StripPrefix("/lib/assets/", http.FileServer(http.Dir("lib/assets/"))))
+	http.Handle("/lib/assets/", http.StripPrefix("/lib/assets/", http.FileServer(http.Dir("lib/assets/"))))
 	http.HandleFunc("/keyword/insert", keywordInsert)
 	http.HandleFunc("/keyword/create", keywordCreate)
 	http.HandleFunc("/keyword/crawl", keywordCrawl)
