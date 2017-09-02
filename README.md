@@ -1,6 +1,6 @@
 ## Overview
 
-It's a web crawler to scrape Google search results
+Application to analyze static files of competing sites
 
 ## Usage
 
