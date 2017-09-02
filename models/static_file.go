@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -46,7 +45,6 @@ func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*
 }
 
 func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time, session *mgo.Session) (staticFile *StaticFile, err error) {
-	fmt.Println("日付は", targetDay)
 	staticFiles := make([]*StaticFile, 0)
 	col := getCollection(session)
 	if err = col.Find(bson.M{
