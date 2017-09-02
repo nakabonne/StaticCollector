@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -44,22 +45,21 @@ func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*
 	return staticFiles
 }
 
-func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time, session *mgo.Session) *StaticFile {
+func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time, session *mgo.Session) (staticFile *StaticFile, err error) {
+	fmt.Println("日付は", targetDay)
 	staticFiles := make([]*StaticFile, 0)
 	col := getCollection(session)
-	if err := col.Find(bson.M{
+	if err = col.Find(bson.M{
 		"page_id":    pageID,
 		"word_id":    wordID,
 		"target_day": targetDay,
 	}).All(&staticFiles); err != nil {
-		log.Fatal("エラー", err)
+		return
 	}
-	return staticFiles[0]
+	if len(staticFiles) >= 1 {
+		staticFile = staticFiles[0]
+	} else {
+		staticFile = &StaticFile{}
+	}
+	return
 }
-
-// 検索方法はこちら↓
-// http://qiita.com/enokidoK/items/a3aff4c05e494b004ef8
-
-//p := new(models.Pages)
-//query := db.C("pages").Find(bson.M{})
-//query.One(&p)

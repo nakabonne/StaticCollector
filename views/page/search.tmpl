@@ -87,15 +87,15 @@ $("input[type=checkbox]").click(function(){
   }
 });
 
-  // とある4週間分のデータログ
   var days = new Array(1);
   var ranks = new Array(1);
   {{range .StaticFiles}}
     ranks.push({{.Rank}});
     days.push({{.TargetDay}})
   {{end}}
+  // 日付のフォーマットを1/1という形式にする
   var target_days = $('#target_days');
-  for(var i = 1; i < days.length; i++) { // iが0から9までの間の繰り返し（毎囘最後に i++ を実行）
+  for(var i = 1; i < days.length; i++) {
     day = days[i].split("T")[0].split("-")[1] + "/" + days[i].split("T")[0].split("-")[2]
 
     var chkboxstr = '<label for="days_' + i + '">' + day + '</label>' + '<input type="checkbox" name="days[]" value="' + days[i] + '">';
