@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"log"
 	"strings"
 )
@@ -12,16 +11,16 @@ type Page struct {
 }
 
 // Insert インサートする
-func (p *Page) Insert(db *sql.DB) {
+func (p *Page) Insert() {
 	query := "INSERT INTO pages (id, url) values(?, ?)"
-	if _, err := db.Exec(query, p.ID, p.URL); err != nil {
+	if _, err := mysqlDB.Exec(query, p.ID, p.URL); err != nil {
 		log.Fatal("インサートエラー：", err)
 	}
 }
 
 // AllPages Pagesテーブルから全件取得
-func AllPages(db *sql.DB) []*Page {
-	rows, err := db.Query("SELECT * FROM `pages`")
+func AllPages() []*Page {
+	rows, err := mysqlDB.Query("SELECT * FROM `pages`")
 	if err != nil {
 		log.Fatal("クエリーエラー：", err)
 		// なんか返す
@@ -49,10 +48,10 @@ func FormatURL(u string) string {
 	return URLarray[0]
 }
 
-func FindPageByURL(db *sql.DB, u string) *Page {
+func FindPageByURL(u string) *Page {
 	query := "SELECT * FROM `pages` WHERE `url` = '" + u + "'"
 	log.Println(query)
-	rows, err := db.Query(query)
+	rows, err := mysqlDB.Query(query)
 	if err != nil {
 		log.Fatal("クエリーエラー：", err)
 	}

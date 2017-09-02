@@ -22,8 +22,8 @@ type searchPages struct {
 func pageSearch(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
 	if err := temp.Execute(w, &searchPages{
-		Pages:    models.AllPages(mysqlDB),
-		Keywords: models.AllKeywords(mysqlDB),
+		Pages:    models.AllPages(),
+		Keywords: models.AllKeywords(),
 	}); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -38,11 +38,11 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	pageID, _ := strconv.Atoi(strings.Join(r.Form["page_id"], ""))
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
 
-	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID, mongoDB)
+	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID)
 	searchPages := &searchPages{
 		StaticFiles: staticFiles,
-		Pages:       models.AllPages(mysqlDB),
-		Keywords:    models.AllKeywords(mysqlDB),
+		Pages:       models.AllPages(),
+		Keywords:    models.AllKeywords(),
 		PageID:      pageID,
 		KeywordID:   keywordID,
 	}
@@ -72,7 +72,7 @@ func pageComparison(w http.ResponseWriter, r *http.Request) {
 	}
 	if len(days) >= 1 {
 		beforeDay, _ := time.Parse(layout, days[0])
-		beforeStaticFile, err := models.FindStaticFilesByPageWordTargetday(pageID, keywordID, beforeDay, mongoDB)
+		beforeStaticFile, err := models.FindStaticFilesByPageWordTargetday(pageID, keywordID, beforeDay)
 		if err != nil {
 			log.Fatal(err)
 			http.Redirect(w, r, "/page/search", 301)
@@ -82,7 +82,7 @@ func pageComparison(w http.ResponseWriter, r *http.Request) {
 	}
 	if len(days) >= 2 {
 		afterDay, _ := time.Parse(layout, days[1])
-		afterbeforeStaticFile, err := models.FindStaticFilesByPageWordTargetday(pageID, keywordID, afterDay, mongoDB)
+		afterbeforeStaticFile, err := models.FindStaticFilesByPageWordTargetday(pageID, keywordID, afterDay)
 		if err != nil {
 			log.Fatal(err)
 			http.Redirect(w, r, "/page/search", 301)

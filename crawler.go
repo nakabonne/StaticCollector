@@ -50,7 +50,7 @@ func (c *crawler) collectHTML() {
 		case res := <-c.res:
 			if res.err == nil {
 				//fmt.Println("構造体は", res.staticFile)
-				res.staticFile.Insert(mongoDB)
+				res.staticFile.Insert()
 			} else {
 				log.Fatal("エラー", res.err)
 			}
@@ -135,11 +135,11 @@ func createStaticFile(u *url.URL, rank int, wordID int, c *crawler) {
 		return
 	}
 	url := models.FormatURL(u.String())
-	page := models.FindPageByURL(mysqlDB, url)
+	page := models.FindPageByURL(url)
 	if page == nil {
 		page = &models.Page{URL: url}
-		page.Insert(mysqlDB)
-		page = models.FindPageByURL(mysqlDB, page.URL)
+		page.Insert()
+		page = models.FindPageByURL(page.URL)
 	}
 	staticFile := &models.StaticFile{
 		ID:        bson.NewObjectId(),

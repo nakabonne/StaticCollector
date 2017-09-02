@@ -26,12 +26,12 @@ func keywordCreate(w http.ResponseWriter, r *http.Request) {
 
 	word := strings.Join(r.Form["word"], "")
 	keyword := &models.Keyword{Word: word}
-	keyword.Insert(mysqlDB)
+	keyword.Insert()
 	http.Redirect(w, r, "/keyword/insert", 301)
 }
 
 func keywordCrawl(w http.ResponseWriter, r *http.Request) {
-	keywords := models.AllKeywords(mysqlDB)
+	keywords := models.AllKeywords()
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/keyword/crawl.tmpl"))
 	if err := temp.Execute(w, keywords); err != nil {
 		log.Fatal("テンプレートエラー", err)
@@ -46,7 +46,7 @@ func crawl(w http.ResponseWriter, r *http.Request) {
 	}
 
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
-	word := models.FindKeyword(mysqlDB, keywordID).Word
+	word := models.FindKeyword(keywordID).Word
 	fmt.Println("ワードは", word)
 
 	log.Println("検索ワード：", word)

@@ -4,7 +4,6 @@ import (
 	"log"
 	"time"
 
-	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -19,22 +18,22 @@ type StaticFile struct {
 	TargetDay time.Time     `bson:"target_day"`
 }
 
-func getCollection(session *mgo.Session) *mgo.Collection {
-	db := session.DB("web_crawler")
-	col := db.C("static_files")
-	return col
-}
+//func getCollection(session *mgo.Session) *mgo.Collection {
+//	db := session.DB("web_crawler")
+//	col := db.C("static_files")
+//	return col
+//}
 
 // Insert インサート
-func (p *StaticFile) Insert(session *mgo.Session) {
-	col := getCollection(session)
+func (p *StaticFile) Insert() {
+	col := getCollection("static_files")
 	col.Insert(p)
 }
 
 // TODO Find系はinterfaceとか使って一元化する
-func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*StaticFile {
+func FindStaticFilesByPageWord(pageID int, wordID int) []*StaticFile {
 	staticFiles := make([]*StaticFile, 0)
-	col := getCollection(session)
+	col := getCollection("static_files")
 	if err := col.Find(bson.M{
 		"page_id": pageID,
 		"word_id": wordID,
@@ -44,9 +43,9 @@ func FindStaticFilesByPageWord(pageID int, wordID int, session *mgo.Session) []*
 	return staticFiles
 }
 
-func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time, session *mgo.Session) (staticFile *StaticFile, err error) {
+func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time) (staticFile *StaticFile, err error) {
 	staticFiles := make([]*StaticFile, 0)
-	col := getCollection(session)
+	col := getCollection("static_files")
 	if err = col.Find(bson.M{
 		"page_id":    pageID,
 		"word_id":    wordID,

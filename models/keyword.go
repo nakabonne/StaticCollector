@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"log"
 	"strconv"
 )
@@ -13,15 +12,15 @@ type Keyword struct {
 }
 
 // Insert インサートする
-func (k *Keyword) Insert(db *sql.DB) {
+func (k *Keyword) Insert() {
 	query := "INSERT INTO keywords (id, word) values(?, ?)"
-	if _, err := db.Exec(query, k.ID, k.Word); err != nil {
+	if _, err := mysqlDB.Exec(query, k.ID, k.Word); err != nil {
 		log.Fatal("インサートエラー：", err)
 	}
 }
 
-func AllKeywords(db *sql.DB) []*Keyword {
-	rows, err := db.Query("SELECT * FROM `keywords`")
+func AllKeywords() []*Keyword {
+	rows, err := mysqlDB.Query("SELECT * FROM `keywords`")
 	if err != nil {
 		log.Fatal("クエリーエラー：", err)
 		// なんか返す
@@ -43,11 +42,11 @@ func AllKeywords(db *sql.DB) []*Keyword {
 	return keywords
 }
 
-func FindKeyword(db *sql.DB, id int) *Keyword {
+func FindKeyword(id int) *Keyword {
 
 	query := "SELECT * FROM `keywords` WHERE `id` = " + strconv.Itoa(id)
 	log.Println(query)
-	rows, err := db.Query(query)
+	rows, err := mysqlDB.Query(query)
 	if err != nil {
 		log.Fatal("クエリーエラー：", err)
 	}

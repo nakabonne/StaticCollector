@@ -7,19 +7,34 @@ import (
 	mgo "gopkg.in/mgo.v2"
 )
 
+var mysqlDB *sql.DB
+var mongoSession *mgo.Session
+var mongoDB *mgo.Database
+
 // OpenMysql Mysqlのコネクションを開く
-func OpenMysql() *sql.DB {
-	db, err := sql.Open("mysql", "root:Tsuba2896@/web_crawler")
-	if err != nil {
-		log.Fatal("Mysqlオープン時にエラー：", err)
-	}
-	return db
+func OpenMysql() error {
+	var err error
+	mysqlDB, err = sql.Open("mysql", "root:Tsuba2896@/web_crawler")
+	return err
+}
+func CloseMysql() {
+	mysqlDB.Close()
+	log.Println("MySQLの接続がCloseしました。")
 }
 
-func GetSettionMongo() *mgo.Session {
-	session, err := mgo.Dial("mongodb://localhost/")
-	if err != nil {
-		log.Fatal("mongoDBオープン時にエラー", err)
-	}
-	return session
+func DialMongo() error {
+	var err error
+	mongoSession, err = mgo.Dial("mongodb://localhost/")
+	return err
+}
+func SetMongoDB() {
+	mongoDB = mongoSession.DB("web_crawler")
+}
+func CloseMongo() {
+	mongoSession.Clone()
+	log.Println("mongoDB接続がCloseしました。")
+}
+
+func getCollection(name string) *mgo.Collection {
+	return mongoDB.C(name)
 }

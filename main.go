@@ -3,18 +3,18 @@ package main
 import (
 	"log"
 	"net/http"
-
 	"webCrawler/models"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var mysqlDB = models.OpenMysql()
-var mongoDB = models.GetSettionMongo()
-
 func main() {
-	defer mysqlDB.Close()
-	defer mongoDB.Clone()
+	models.OpenMysql()
+	models.DialMongo()
+	models.SetMongoDB()
+	defer models.CloseMysql()
+	defer models.CloseMongo()
+	return
 
 	//http.Handle("/lib/assets/", http.StripPrefix("/lib/assets/", http.FileServer(http.Dir("lib/assets/"))))
 	http.HandleFunc("/keyword/insert", keywordInsert)
