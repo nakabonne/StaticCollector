@@ -9,12 +9,8 @@ import (
 )
 
 func main() {
-	models.OpenMysql()
-	models.DialMongo()
-	models.SetMongoDB()
-	defer models.CloseMysql()
-	defer models.CloseMongo()
-	return
+	models.OpenDB()
+	defer models.CloseDB()
 
 	//http.Handle("/lib/assets/", http.StripPrefix("/lib/assets/", http.FileServer(http.Dir("lib/assets/"))))
 	http.HandleFunc("/keyword/insert", keywordInsert)
