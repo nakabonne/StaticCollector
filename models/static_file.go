@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -25,22 +24,24 @@ type StaticFile struct {
 //}
 
 // Insert インサート
-func (p *StaticFile) Insert() {
+func (p *StaticFile) Insert() (err error) {
 	col := getCollection("static_files")
-	col.Insert(p)
+	if err = col.Insert(p); err != nil {
+		return
+	}
+	return
 }
 
 // TODO Find系はinterfaceとか使って一元化する
-func FindStaticFilesByPageWord(pageID int, wordID int) []*StaticFile {
-	staticFiles := make([]*StaticFile, 0)
+func FindStaticFilesByPageWord(pageID int, wordID int) (staticFiles []*StaticFile, err error) {
 	col := getCollection("static_files")
-	if err := col.Find(bson.M{
+	if err = col.Find(bson.M{
 		"page_id": pageID,
 		"word_id": wordID,
 	}).All(&staticFiles); err != nil {
-		log.Fatal("エラー", err)
+		return
 	}
-	return staticFiles
+	return
 }
 
 func FindStaticFilesByPageWordTargetday(pageID int, wordID int, targetDay time.Time) (staticFile *StaticFile, err error) {

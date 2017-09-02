@@ -49,10 +49,12 @@ func (c *crawler) collectHTML() {
 
 		case res := <-c.res:
 			if res.err == nil {
-				//fmt.Println("構造体は", res.staticFile)
-				res.staticFile.Insert()
+				err := res.staticFile.Insert()
+				if err != nil {
+					log.Fatal(err)
+				}
 			} else {
-				log.Fatal("エラー", res.err)
+				log.Fatal(res.err)
 			}
 
 		case req := <-c.req:
@@ -67,7 +69,7 @@ func (c *crawler) collectHTML() {
 			wc++
 			baseURL, err := url.Parse(req.url)
 			if err != nil {
-				log.Fatal("エラー", err)
+				log.Fatal(err)
 			}
 			switch req.depth {
 			case 0:

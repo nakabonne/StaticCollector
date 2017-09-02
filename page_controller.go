@@ -49,7 +49,11 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	pageID, _ := strconv.Atoi(strings.Join(r.Form["page_id"], ""))
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
 
-	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID)
+	staticFiles, err := models.FindStaticFilesByPageWord(pageID, keywordID)
+	if err != nil {
+		log.Fatal(err)
+		http.Redirect(w, r, "/page/serach", 301)
+	}
 	keywords, err := models.AllKeywords()
 	if err != nil {
 		log.Fatal(err)
