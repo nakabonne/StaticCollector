@@ -60,10 +60,8 @@
         <form action="/page/comparison" method="post">
           <input type="hidden" name="page_id" value="{{.PageID}}">
           <input type="hidden" name="keyword_id" value="{{.KeywordID}}">
-          <div class="form-group">
-            {{range .StaticFiles}}
-              {{.TargetDay}}<input type="checkbox" name="days[]" value="{{.TargetDay}}">
-            {{end}}
+          <div class="form-group" id="target_days">
+
           </div>
 
           <input type="submit" value="比較" class="btn btn-md btn-primary">
@@ -96,6 +94,20 @@ $("input[type=checkbox]").click(function(){
     ranks.push({{.Rank}});
     days.push({{.TargetDay}})
   {{end}}
+  var target_days = $('#target_days');
+  for(var i = 1; i < days.length; i++) { // iが0から9までの間の繰り返し（毎囘最後に i++ を実行）
+    day = days[i].split("T")[0].split("-")[1] + "/" + days[i].split("T")[0].split("-")[2]
+
+    var chkboxstr = '<label for="days_' + i + '">' + day + '</label>' + '<input type="checkbox" name="days[]" value="' + days[i] + '">';
+    target_days.append(chkboxstr);
+
+    days[i] = day
+  }
+
+
+
+
+
   var barChartData = {
       labels: days,
       datasets: [
@@ -118,8 +130,6 @@ $("input[type=checkbox]").click(function(){
       tooltipTitleFontStyle : "normal",
       maintainAspectRatio: false,
       tooltips:{mode: 'label'},
-      vAxis: {direction:-1}, // Y軸を逆方向にする
-      hAxis: {direction:-1},  // X軸を逆方向にする
       scales: {
           yAxes: [{
               id: "rank",   // Y軸のID
