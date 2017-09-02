@@ -17,13 +17,7 @@ type StaticFile struct {
 	TargetDay time.Time     `bson:"target_day"`
 }
 
-//func getCollection(session *mgo.Session) *mgo.Collection {
-//	db := session.DB("web_crawler")
-//	col := db.C("static_files")
-//	return col
-//}
-
-// Insert インサート
+// Insert インサートする
 func (p *StaticFile) Insert() (err error) {
 	col := getCollection("static_files")
 	if err = col.Insert(p); err != nil {

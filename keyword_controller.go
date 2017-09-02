@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -13,7 +12,7 @@ import (
 func keywordInsert(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/keyword/insert.tmpl"))
 	if err := temp.Execute(w, nil); err != nil {
-		log.Fatal("テンプレートエラー", err)
+		log.Fatal("template error!!!!", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -21,7 +20,7 @@ func keywordInsert(w http.ResponseWriter, r *http.Request) {
 func keywordCreate(w http.ResponseWriter, r *http.Request) {
 	// リクエストをパース
 	if err := r.ParseForm(); err != nil {
-		log.Fatal("エラー：", err)
+		log.Fatal("parse error!!!!", err)
 	}
 
 	word := strings.Join(r.Form["word"], "")
@@ -38,14 +37,14 @@ func keywordCrawl(w http.ResponseWriter, r *http.Request) {
 	}
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/keyword/crawl.tmpl"))
 	if err := temp.Execute(w, keywords); err != nil {
-		log.Fatal("テンプレートエラー", err)
+		log.Fatal("template error!!!!", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func crawl(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		log.Fatal("エラー：", err)
+		log.Fatal("parse error!!!!", err)
 	}
 
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
@@ -55,7 +54,6 @@ func crawl(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/keyword/insert", 301)
 	}
 	word := keyword.Word
-	fmt.Println("ワードは", word)
 
 	log.Println("検索ワード：", word)
 	word = strings.Replace(word, " ", "+", -1)
@@ -64,7 +62,7 @@ func crawl(w http.ResponseWriter, r *http.Request) {
 
 	c := newCrawler()
 	go c.collectHTML()
-	wordID := keywordID // SQLから取得する
+	wordID := keywordID
 	c.req <- &request{
 		url:    firstURL,
 		wordID: wordID,

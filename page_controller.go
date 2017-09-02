@@ -35,7 +35,7 @@ func pageSearch(w http.ResponseWriter, r *http.Request) {
 		Pages:    pages,
 		Keywords: keywords,
 	}); err != nil {
-		log.Fatal("テンプレートエラー", err)
+		log.Fatal("template error!!!!", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -74,14 +74,14 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	sort.Sort(searchPages.StaticFiles)
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
 	if err := temp.Execute(w, searchPages); err != nil {
-		log.Fatal("テンプレートエラー", err)
+		log.Fatal("template error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func pageComparison(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		log.Fatal(err)
+		log.Fatal("parse error!!!!", err)
 		http.Redirect(w, r, "/page/serach", 301)
 	}
 
@@ -119,7 +119,7 @@ func pageComparison(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/comparison.tmpl"))
 	if err := temp.Execute(w, staticFiles); err != nil {
-		log.Fatal("テンプレートエラー", err)
+		log.Fatal("template error!!!!", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

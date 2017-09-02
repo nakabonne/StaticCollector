@@ -96,6 +96,9 @@ func createRequest(u *url.URL, depth int, c *crawler) {
 
 	urls := make([]string, 0)
 	doc, err := getDoc(u)
+	if err != nil {
+		log.Fatal(err)
+	}
 	doc.Find(".r").Each(func(_ int, srg *goquery.Selection) {
 		srg.Find("a").Each(func(_ int, s *goquery.Selection) {
 			href, exists := s.Attr("href")
@@ -160,10 +163,6 @@ func createStaticFile(u *url.URL, rank int, wordID int, c *crawler) {
 }
 
 func getDoc(u *url.URL) (doc *goquery.Document, err error) {
-	if err != nil {
-		return
-	}
-
 	res, err := http.Get(u.String())
 	if err != nil {
 		return

@@ -23,8 +23,7 @@ func (p *Page) Insert() (err error) {
 func AllPages() (pages []*Page, err error) {
 	rows, err := mysqlDB.Query("SELECT * FROM `pages`")
 	if err != nil {
-		log.Fatal("クエリーエラー：", err)
-		// なんか返す
+		return
 	}
 
 	for rows.Next() {
