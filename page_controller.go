@@ -21,9 +21,10 @@ type searchPages struct {
 
 func pageSearch(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
+	keywords, err := models.AllKeywords()
 	if err := temp.Execute(w, &searchPages{
 		Pages:    models.AllPages(),
-		Keywords: models.AllKeywords(),
+		Keywords: keywords,
 	}); err != nil {
 		log.Fatal("テンプレートエラー", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -39,10 +40,11 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
 
 	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID)
+	keywords, err := models.AllKeywords()
 	searchPages := &searchPages{
 		StaticFiles: staticFiles,
 		Pages:       models.AllPages(),
-		Keywords:    models.AllKeywords(),
+		Keywords:    keywords,
 		PageID:      pageID,
 		KeywordID:   keywordID,
 	}

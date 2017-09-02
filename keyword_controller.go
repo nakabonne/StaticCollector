@@ -31,7 +31,7 @@ func keywordCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func keywordCrawl(w http.ResponseWriter, r *http.Request) {
-	keywords := models.AllKeywords()
+	keywords, err := models.AllKeywords()
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/keyword/crawl.tmpl"))
 	if err := temp.Execute(w, keywords); err != nil {
 		log.Fatal("テンプレートエラー", err)
@@ -46,7 +46,8 @@ func crawl(w http.ResponseWriter, r *http.Request) {
 	}
 
 	keywordID, _ := strconv.Atoi(strings.Join(r.Form["keyword_id"], ""))
-	word := models.FindKeyword(keywordID).Word
+	keyword, err := models.FindKeyword(keywordID)
+	word := keyword.Word
 	fmt.Println("ワードは", word)
 
 	log.Println("検索ワード：", word)
