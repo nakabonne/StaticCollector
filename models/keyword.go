@@ -36,7 +36,7 @@ func AllKeywords() (keywords []*Keyword, err error) {
 			word string
 		)
 		if err = rows.Scan(&id, &word); err != nil {
-			log.Fatal("スキャンエラー: ", err)
+			return
 		}
 		keywords = append(keywords, &Keyword{ID: id, Word: word})
 	}

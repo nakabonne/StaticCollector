@@ -11,35 +11,34 @@ type Page struct {
 }
 
 // Insert インサートする
-func (p *Page) Insert() {
+func (p *Page) Insert() (err error) {
 	query := "INSERT INTO pages (id, url) values(?, ?)"
-	if _, err := mysqlDB.Exec(query, p.ID, p.URL); err != nil {
-		log.Fatal("インサートエラー：", err)
+	if _, err = mysqlDB.Exec(query, p.ID, p.URL); err != nil {
+		return
 	}
+	return
 }
 
 // AllPages Pagesテーブルから全件取得
-func AllPages() []*Page {
+func AllPages() (pages []*Page, err error) {
 	rows, err := mysqlDB.Query("SELECT * FROM `pages`")
 	if err != nil {
 		log.Fatal("クエリーエラー：", err)
 		// なんか返す
 	}
 
-	pages := []*Page{}
-
 	for rows.Next() {
 		var (
 			id  int
 			url string
 		)
-		if err := rows.Scan(&id, &url); err != nil {
-			log.Fatal("スキャンエラー: ", err)
+		if err = rows.Scan(&id, &url); err != nil {
+			return
 		}
 		pages = append(pages, &Page{ID: id, URL: url})
 	}
 	rows.Close()
-	return pages
+	return
 }
 
 func FormatURL(u string) string {
@@ -48,26 +47,24 @@ func FormatURL(u string) string {
 	return URLarray[0]
 }
 
-func FindPageByURL(u string) *Page {
+func FindPageByURL(u string) (page *Page, err error) {
 	query := "SELECT * FROM `pages` WHERE `url` = '" + u + "'"
 	log.Println(query)
 	rows, err := mysqlDB.Query(query)
 	if err != nil {
-		log.Fatal("クエリーエラー：", err)
+		return
 	}
-
-	var page *Page
 
 	for rows.Next() {
 		var (
 			id  int
 			url string
 		)
-		if err := rows.Scan(&id, &url); err != nil {
-			log.Fatal("スキャンエラー: ", err)
+		if err = rows.Scan(&id, &url); err != nil {
+			return
 		}
 		page = &Page{ID: id, URL: url}
 	}
 	rows.Close()
-	return page
+	return
 }

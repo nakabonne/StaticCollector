@@ -135,11 +135,11 @@ func createStaticFile(u *url.URL, rank int, wordID int, c *crawler) {
 		return
 	}
 	url := models.FormatURL(u.String())
-	page := models.FindPageByURL(url)
+	page, _ := models.FindPageByURL(url)
 	if page == nil {
 		page = &models.Page{URL: url}
 		page.Insert()
-		page = models.FindPageByURL(page.URL)
+		page, err = models.FindPageByURL(page.URL)
 	}
 	staticFile := &models.StaticFile{
 		ID:        bson.NewObjectId(),

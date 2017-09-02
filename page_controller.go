@@ -26,8 +26,13 @@ func pageSearch(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 		http.Redirect(w, r, "/keyword/insert", 301)
 	}
+	pages, err := models.AllPages()
+	if err != nil {
+		log.Fatal(err)
+		http.Redirect(w, r, "/keyword/insert", 301)
+	}
 	if err := temp.Execute(w, &searchPages{
-		Pages:    models.AllPages(),
+		Pages:    pages,
 		Keywords: keywords,
 	}); err != nil {
 		log.Fatal("テンプレートエラー", err)
@@ -50,9 +55,14 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 		http.Redirect(w, r, "/page/serach", 301)
 	}
+	pages, err := models.AllPages()
+	if err != nil {
+		log.Fatal(err)
+		http.Redirect(w, r, "/page/serach", 301)
+	}
 	searchPages := &searchPages{
 		StaticFiles: staticFiles,
-		Pages:       models.AllPages(),
+		Pages:       pages,
 		Keywords:    keywords,
 		PageID:      pageID,
 		KeywordID:   keywordID,
