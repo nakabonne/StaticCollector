@@ -22,6 +22,10 @@ type searchPages struct {
 func pageSearch(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("views/layout.tmpl", "views/page/search.tmpl"))
 	keywords, err := models.AllKeywords()
+	if err != nil {
+		log.Fatal(err)
+		http.Redirect(w, r, "/keyword/insert", 301)
+	}
 	if err := temp.Execute(w, &searchPages{
 		Pages:    models.AllPages(),
 		Keywords: keywords,
@@ -33,7 +37,8 @@ func pageSearch(w http.ResponseWriter, r *http.Request) {
 
 func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		log.Fatal("エラー：", err)
+		log.Fatal(err)
+		http.Redirect(w, r, "/page/serach", 301)
 	}
 
 	pageID, _ := strconv.Atoi(strings.Join(r.Form["page_id"], ""))
@@ -41,6 +46,10 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 
 	staticFiles := models.FindStaticFilesByPageWord(pageID, keywordID)
 	keywords, err := models.AllKeywords()
+	if err != nil {
+		log.Fatal(err)
+		http.Redirect(w, r, "/page/serach", 301)
+	}
 	searchPages := &searchPages{
 		StaticFiles: staticFiles,
 		Pages:       models.AllPages(),
@@ -58,7 +67,8 @@ func pageCompetitorIndex(w http.ResponseWriter, r *http.Request) {
 
 func pageComparison(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		log.Fatal("エラー：", err)
+		log.Fatal(err)
+		http.Redirect(w, r, "/page/serach", 301)
 	}
 
 	pageID, _ := strconv.Atoi(strings.Join(r.Form["page_id"], ""))
