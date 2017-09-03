@@ -8,7 +8,7 @@ You can do the following.
 
 ![result](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/NCA_demo.gif)
 
-## Instalation
+## Installation
 
 ```
 $ go get https://github.com/ryonakao/StaticCollector.git
