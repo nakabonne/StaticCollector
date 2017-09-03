@@ -4,7 +4,7 @@ Application to analyze static files of competing sites.
 You can do the following.
 
 - Confirm the change in ranking of competing websites
-- Compare two HTML
+- Compare the two HTML before and after the rank change
 
 ![result](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/NCA_demo.gif)
 
