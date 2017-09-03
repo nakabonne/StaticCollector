@@ -1,11 +1,22 @@
 {{define "content"}}
-    <h2>キーワードを選択して下さい</h2>
-    <form action="/crawl" method="post">
-      <select name="keyword_id" class="form-control select2">
-        {{range .}}
-        <option value="{{.ID}}">{{.Word}}</option>
-        {{end}}
-      </select>
-      <input type="submit" value="実行">
-    </form>
+<div class="box box-danger">
+  <div class="box-header with-border">
+    <h3 class="box-title">クローリング</h3>&nbsp;&nbsp;
+  </div>
+
+  <div class="box-body">
+    <div class="form-group">
+      <form action="/crawl" method="post">
+        <p>キーワードを選択して下さい</p>
+        <select name="keyword_id" class="form-control select2">
+          {{range .}}
+          <option value="{{.ID}}">{{.Word}}</option>
+          {{end}}
+        </select>
+        <input type="submit" value="実行" class="btn btn-md btn-primary">
+      </form>
+    </div>
+  </div>
+</div>
 {{end}}
+

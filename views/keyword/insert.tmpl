@@ -1,7 +1,17 @@
 {{define "content"}}
-    <h2>キーワード登録</h2>
-    <form action="/keyword/create" method="post">
-      <input name="word" type="text"></input>
-      <input type="submit" value="投稿">
-    </form>
+<div class="box box-danger">
+  <div class="box-header with-border">
+    <h3 class="box-title">キーワード登録</h3>&nbsp;&nbsp;
+  </div>
+
+  <div class="box-body">
+    <div class="form-group">
+      <form action="/keyword/create" method="post">
+        <input name="word" type="text" class="form-control"></input>
+        <input type="submit" value="登録" class="btn btn-md btn-primary">
+      </form>
+    </div>
+  </div>
+</div>
 {{end}}
+
