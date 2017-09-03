@@ -4,8 +4,13 @@
 <div class="row row-eq-height">
   {{range .}}
   <div class="col-md-6">
-    <p>日付：{{.TargetDay}}</p>
-    <p>順位：{{.Rank}}</p>
+    <div class="box box-danger">
+      <div class="box-body">
+        <p>日付：{{.TargetDay}}</p>
+        <p>順位：{{.Rank}}</p>
+      </div>
+    </div>
+
     <pre><code class="prettyprint linenums">
     {{.HTML}}
     </code></pre>
