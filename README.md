@@ -1,16 +1,22 @@
 ## Overview
 
-Application to analyze static files of competing sites
+Application to analyze static files of competing sites.
+You can do the following.
+
+- Confirm the change in ranking of competing websites
+- Compare two HTML
+
+![result](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/NCA_demo.gif)
 
 ## Usage
 
-mongo起動
+Start mongoDB
 
 ```
 $ sudo mongod --dbpath /var/lib/mongodb --logpath /var/log/moodb.log
 ```
 
-Mysql起動
+Start Mysql
 
 ```
 $ mysql.server restart
@@ -19,5 +25,5 @@ $ mysql.server restart
 仮StaticFiles挿入
 
 ```
-> db.static_files.insert({word_id:1, page_id:8, title:'引越しの見積もりは引越しの専業【サカイ引越センター】公式サイト', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
+> db.static_files.insert({word_id:1, page_id:8, title:'仮タイトル', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
 ```
