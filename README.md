@@ -31,5 +31,5 @@ $ mysql.server restart
 Insert a temporary Static file
 
 ```
-> db.static_files.insert({word_id:1, page_id:8, title:'仮タイトル', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
+> db.static_files.insert({word_id:1, page_id:8, title:'tmp title', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
 ```
