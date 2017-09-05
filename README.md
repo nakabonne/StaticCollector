@@ -6,7 +6,7 @@ You can do the following.
 - Confirm the change in ranking of competing websites
 - Compare the two HTML before and after the rank change
 
-![result](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/NCA_demo.gif)
+![result](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/demo_ver2.gif)
 
 ## Installation
 
