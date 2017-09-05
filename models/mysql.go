@@ -8,7 +8,8 @@ import (
 var mysqlDB *sql.DB
 
 func openMysql() (err error) {
-	mysqlDB, err = sql.Open("mysql", "root:Tsuba2896@/web_crawler")
+	// sqlUser,sqlPass,sqlNameは別ファイルにて管理(gitでは管理外)
+	mysqlDB, err = sql.Open("mysql", sqlUser+":"+sqlPass+"@/"+sqlName)
 	return
 }
 func closeMysql() {
