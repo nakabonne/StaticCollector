@@ -11,7 +11,7 @@ You can do the following.
 ## Installation
 
 ```
-$ go get https://github.com/ryonakao/StaticCollector.git
+$ go get github.com/ryonakao/StaticCollector
 ```
 
 ## Usage
