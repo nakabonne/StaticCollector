@@ -8,6 +8,18 @@ You can do the following.
 
 ![result](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/NCA_demo.gif)
 
+
+- Register keywords
+
+
+![resul](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/keyword_insert.png)
+
+
+- Crawl on the web
+
+
+![resu](https://github.com/ryonakao/StaticCollector/blob/media_for_demo/media/crawl.png)
+
 ## Installation
 
 ```
