@@ -26,22 +26,36 @@ You can do the following.
 $ go get github.com/ryonakao/StaticCollector
 ```
 
-## Usage
+## SetUP
 
-Start mongoDB
+Setup mongoDB
 
 ```
 $ sudo mongod --dbpath /var/lib/mongodb --logpath /var/log/moodb.log
 ```
 
-Start Mysql
+```
+$ mongo
+> use web_crawler
+> db.createCollection('static_files');
+> db.static_files.insert({word_id:1, page_id:8, title:'tmp title', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
+```
+
+Setup Mysql
 
 ```
 $ mysql.server restart
 ```
 
-Insert a temporary Static file
+```
+$ mysql -u root -p
+```
 
 ```
-> db.static_files.insert({word_id:1, page_id:8, title:'tmp title', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
+mysql> CREATE DATABASE web_crawler;
+mysql> use web_crawler
+mysql> CREATE TABLE keywords (id int AUTO_INCREMENT PRIMARY KEY, word varchar(100) NOT NULL);
+mysql> CREATE TABLE pages (id int AUTO_INCREMENT PRIMARY KEY, url varchar(300) UNIQUE NOT NULL);
 ```
+
+
