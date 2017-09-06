@@ -28,30 +28,40 @@ $ go get github.com/ryonakao/StaticCollector
 
 ## SetUP
 
-Setup mongoDB
+### Setup mongoDB
+
+Start
 
 ```
 $ sudo mongod --dbpath /var/lib/mongodb --logpath /var/log/moodb.log
 ```
 
+Create collection
+
 ```
 $ mongo
 > use web_crawler
 > db.createCollection('static_files');
-> db.static_files.insert({word_id:1, page_id:8, title:'tmp title', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
 ```
 
-Setup Mysql
+Insert tmp data
+
+```
+> db.static_files.insert({word_id:1, page_id:1, title:'tmp title', html:"<html></html>", rank:2, target_day:ISODate("2017-08-24T04:54:00.697Z")});
+```
+
+### Setup Mysql
+
+Start
 
 ```
 $ mysql.server restart
 ```
 
-```
-$ mysql -u root -p
-```
+Create tables
 
 ```
+$ mysql -u root -p
 mysql> CREATE DATABASE web_crawler;
 mysql> use web_crawler
 mysql> CREATE TABLE keywords (id int AUTO_INCREMENT PRIMARY KEY, word varchar(100) NOT NULL);
