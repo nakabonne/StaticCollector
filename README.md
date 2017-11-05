@@ -70,4 +70,4 @@ mysql> CREATE TABLE pages (id int AUTO_INCREMENT PRIMARY KEY, url varchar(300) U
 
 # License
 
-`talkativeness` source code is available under the MIT [License](https://github.com/ryonakao/StaticCollector/blob/master/LICENSE).
+`StaticCollector` source code is available under the MIT [License](https://github.com/ryonakao/StaticCollector/blob/master/LICENSE).
