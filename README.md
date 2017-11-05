@@ -68,4 +68,6 @@ mysql> CREATE TABLE keywords (id int AUTO_INCREMENT PRIMARY KEY, word varchar(10
 mysql> CREATE TABLE pages (id int AUTO_INCREMENT PRIMARY KEY, url varchar(300) UNIQUE NOT NULL);
 ```
 
+# License
 
+`talkativeness` source code is available under the MIT [License](https://github.com/ryonakao/StaticCollector/blob/master/LICENSE).
